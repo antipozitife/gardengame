@@ -1,0 +1,325 @@
+.flower-types {
+  background: #F5F5F0;
+  padding: 80px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.flower-types-container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.flower-types-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #4A5A3A;
+  text-align: center;
+  margin: 0 0 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.title-icon {
+  width: 80px;
+  height: 80px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.flowers-carousel-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 30px 0;
+}
+
+.flowers-carousel-wrapper::before,
+.flowers-carousel-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 250px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.flowers-carousel-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, #F5F5F0 0%, transparent 100%);
+}
+
+.flowers-carousel-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, #F5F5F0 0%, transparent 100%);
+}
+
+.flowers-carousel-wrapper:hover .flowers-carousel-track {
+  animation-play-state: paused;
+}
+
+.flowers-carousel-track {
+  display: flex;
+  gap: 40px;
+  animation: scroll 35s linear infinite;
+  width: max-content;
+}
+
+.flower-card {
+  flex: 0 0 auto;
+  width: 380px;
+  background: #ffffff;
+  border-radius: 25px;
+  padding: 45px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.flower-card:hover {
+  transform: translateY(-15px) scale(1.05);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.flower-image-wrapper {
+  width: 190px;
+  height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0 0 0 25px;
+  overflow: hidden; /* Важно! */
+}
+
+.flower-image {
+  max-width: 190px; /* Точный размер */
+  max-height: 190px; /* Точный размер */
+  width: auto;
+  height: auto;
+  object-fit: scale-down; /* Уменьшает изображение при необходимости */
+  display: block;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+  animation: floatFlower 3s ease-in-out infinite;
+}
+
+.flower-card:nth-child(5n+1) .flower-image {
+  animation-delay: 0s;
+}
+
+.flower-card:nth-child(5n+2) .flower-image {
+  animation-delay: 0.3s;
+}
+
+.flower-card:nth-child(5n+3) .flower-image {
+  animation-delay: 0.6s;
+}
+
+.flower-card:nth-child(5n+4) .flower-image {
+  animation-delay: 0.9s;
+}
+
+.flower-card:nth-child(5n+5) .flower-image {
+  animation-delay: 1.2s;
+}
+
+.flower-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #4A5A3A;
+  margin: 0 0 20px;
+}
+
+.flower-price {
+  font-size: 20px !important;
+  font-weight: 700;
+  color: #8B9A6B;
+  margin: 0 0 20px;
+}
+
+.rarity-badge {
+  padding: 12px 28px;
+  border-radius: 50px;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.rarity-badge:hover {
+  transform: scale(1.08);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+@media (max-width: 1024px) {
+  .flower-types-title {
+    font-size: 3rem;
+    gap: 15px;
+  }
+
+  .title-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .flower-card {
+    width: 340px;
+    padding: 40px 25px;
+  }
+
+  .flower-image-wrapper {
+    width: 180px;
+    height: 180px;
+  }
+
+  .flower-image {
+    max-width: 180px;
+    max-height: 180px;
+  }
+
+  .flower-name {
+    font-size: 1.8rem;
+  }
+
+  .flower-price {
+    font-size: 1.6rem;
+  }
+
+  .flower-income {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .flower-types {
+    padding: 60px 20px;
+  }
+
+  .flower-types-title {
+    font-size: 2.8rem;
+    margin-bottom: 50px;
+    gap: 12px;
+  }
+
+  .title-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .flowers-carousel-track {
+    gap: 30px;
+    animation: scroll 30s linear infinite;
+  }
+
+  .flower-card {
+    width: 300px;
+    padding: 35px 20px;
+  }
+
+  .flower-image-wrapper {
+    width: 160px;
+    height: 160px;
+  }
+
+  .flower-image {
+    max-width: 160px;
+    max-height: 160px;
+  }
+
+  .flower-name {
+    font-size: 1.6rem;
+  }
+
+  .flower-price {
+    font-size: 1.4rem;
+  }
+
+  .flower-income {
+    font-size: 1rem;
+  }
+
+  .rarity-badge {
+    padding: 10px 24px;
+    font-size: 1rem;
+  }
+
+  .flowers-carousel-wrapper::before,
+  .flowers-carousel-wrapper::after {
+    width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .flower-types {
+    padding: 50px 15px;
+  }
+
+  .flower-types-title {
+    font-size: 2.2rem;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .title-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .flowers-carousel-track {
+    gap: 20px;
+    animation: scroll 25s linear infinite;
+  }
+
+  .flower-card {
+    width: 260px;
+    padding: 30px 18px;
+  }
+
+  .flower-image-wrapper {
+    width: 140px;
+    height: 140px;
+  }
+
+  .flower-image {
+    max-width: 140px;
+    max-height: 140px;
+  }
+
+  .flower-name {
+    font-size: 1.4rem;
+  }
+
+  .flower-price {
+    font-size: 1.2rem;
+  }
+
+  .flower-income {
+    font-size: 0.95rem;
+  }
+
+  .rarity-badge {
+    padding: 8px 20px;
+    font-size: 0.95rem;
+  }
+
+  .flowers-carousel-wrapper::before,
+  .flowers-carousel-wrapper::after {
+    width: 120px;
+  }
+}

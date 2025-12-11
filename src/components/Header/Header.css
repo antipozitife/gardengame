@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+CZ:wght@100..400&display=swap');
+
+:root {
+  --header-height: 120px;
+  --coin-size: calc(var(--header-height) * 4 / 2);
+}
+
+.header {
+  background: linear-gradient(135deg, #93A267 0%, #485935 100%);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  top: 0;
+  z-index: 100;
+  transition: background 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Слайд 1: Розовый */
+.header.header-slide-1 {
+  background: linear-gradient(135deg, #FFB6D9 0%, #FF8FA3 50%, #FF69B4 100%);
+}
+
+/* Слайд 2: Оранжево-красный */
+.header.header-slide-2 {
+  background: linear-gradient(135deg, #FFB6D9 0%, #FF8FA3 50%, #FF69B4 100%);
+}
+
+/* Слайд 3: Золотой */
+.header.header-slide-3 {
+  background: linear-gradient(135deg, #93A267 0%, #485935 100%);
+}
+
+.header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 15px;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-link-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: visible;
+  width: var(--coin-size);
+  height: var(--coin-size);
+  margin-top: calc(var(--coin-size) * 0.5);
+  text-decoration: none;
+  perspective: 1000px;
+  transition: transform 0.2s ease;
+}
+
+.nav-link-logo:hover {
+  transform: scale(1.05);
+}
+
+.header-span {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  font-family: 'Playwrite CZ', cursive;
+  font-size: 50px;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 1000;
+}
+
+.header-text {
+  font-family: 'Playwrite CZ', cursive;
+  font-size: 50px;
+  color: #fff;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin: 0;
+  transition: text-shadow 0.8s ease;
+}
+
+.header.header-slide-1 .header-text,
+.header.header-slide-2 .header-text {
+  text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+.header.header-slide-3 .header-text {
+  text-shadow: 3px 3px 8px rgba(100, 100, 100, 0.4);
+}
+
+/* Монета с анимацией */
+.coin {
+  width: var(--coin-size);
+  height: var(--coin-size);
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.coin-face {
+  width: var(--coin-size);
+  height: var(--coin-size);
+  position: absolute;
+  top: 0;
+  left: 0;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #718050 0%, #69784b 100%);
+  overflow: hidden;
+  border: 5px solid #93A267;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.8s ease, background 0.8s ease;
+}
+
+.header.header-slide-1 .coin-face {
+  border-color: #FF69B4;
+  background: linear-gradient(135deg, #FFB6D9 0%, #FF8FA3 100%);
+}
+
+.header.header-slide-2 .coin-face {
+  border-color: #FF69B4;
+  background: linear-gradient(135deg, #FFB6D9 0%, #FF8FA3 100%);
+}
+
+.header.header-slide-3 .coin-face {
+  border-color: #93A267;
+  background: linear-gradient(135deg, #93A267 0%, #485935 100%);
+}
+
+.coin-front {
+  transform: rotateY(0deg);
+}
+
+.coin-back {
+  transform: rotateY(180deg);
+}
+
+.coin-front img,
+.coin-back img {
+  width: 80%;
+  height: auto;
+  display: block;
+}
+
+.coin-back img {
+  width: 110%;
+  object-fit: cover;
+}
+
+/* Coin spinning animation */
+@keyframes spinCoin {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.coin.spinning {
+  animation: spinCoin 3s ease-in-out forwards;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+  :root {
+    --header-height: 100px;
+  }
+
+  .header-text {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --header-height: 60px;
+  }
+
+  .header-text {
+    font-size: 24px;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --header-height: 50px;
+  }
+
+  .header-text {
+    font-size: 18px;
+    gap: 10px;
+  }
+}
