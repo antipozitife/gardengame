@@ -36,7 +36,7 @@ const Hero = () => {
     },
     {
       id: 3,
-      title: "Зарабатывай криптовалюту",
+      title: "Играй с настоящей криптовалютой",
       image: gvozdika,
       bgImage: bgFlowers3,
       bgClass: "bg-slide-3",

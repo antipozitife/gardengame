@@ -116,43 +116,59 @@ const FlowerShop: React.FC = () => {
   };
 
   const handleBuy = async (flower: Flower) => {
-    if (!publicKey) {
-      setPurchaseMessage('❌ Подключите кошелек!');
-      setTimeout(() => setPurchaseMessage(''), 3000);
-      return;
-    }
+  console.log('🛒 Начало покупки цветка:', flower);
+  
+  if (!publicKey) {
+    console.error('❌ PublicKey отсутствует');
+    setPurchaseMessage('❌ Подключите кошелек!');
+    setTimeout(() => setPurchaseMessage(''), 3000);
+    return;
+  }
 
-    if (userBalance !== null && userBalance < flower.price) {
-      setPurchaseMessage('❌ Недостаточно FLW токенов!');
-      setTimeout(() => setPurchaseMessage(''), 3000);
-      return;
-    }
+  console.log('👤 PublicKey:', publicKey);
 
-    setIsLoading(true);
-    setPurchaseMessage(`⏳ Покупка ${flower.name}...`);
+  if (userBalance !== null && userBalance < flower.price) {
+    console.error('❌ Недостаточно средств:', userBalance, '<', flower.price);
+    setPurchaseMessage('❌ Недостаточно FLW токенов!');
+    setTimeout(() => setPurchaseMessage(''), 3000);
+    return;
+  }
 
-    try {
-      // Реальный вызов смарт-контракта
-      const txHash = await buyFlower(publicKey, flower.id, flower.price, flower.name);
-      
-      setPurchaseMessage(`✅ Вы купили ${flower.name}! TX: ${txHash.substring(0, 8)}...`);
-      
-      // Обновляем баланс после покупки
-      await fetchBalance(publicKey);
-      
-      // Перезагружаем страницу через 2 секунды чтобы обновить MyGarden
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-      
-    } catch (error: any) {
-      console.error('Ошибка при покупке:', error);
-      setPurchaseMessage(`❌ Ошибка: ${error.message || 'Не удалось купить цветок'}`);
-    } finally {
-      setIsLoading(false);
-      setTimeout(() => setPurchaseMessage(''), 5000);
-    }
-  };
+  setIsLoading(true);
+  setPurchaseMessage(`⏳ Покупка ${flower.name}...`);
+  
+  try {
+    console.log('🔄 Вызов buyFlower:', {
+      publicKey,
+      flowerId: flower.id,
+      price: flower.price,
+      name: flower.name
+    });
+    
+    const txHash = await buyFlower(publicKey, flower.id, flower.price, flower.name);
+    
+    console.log('✅ Транзакция успешна, txHash:', txHash);
+    setPurchaseMessage(`✅ Вы купили ${flower.name}! TX: ${txHash.substring(0, 8)}...`);
+    
+    await fetchBalance(publicKey);
+    
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+  } catch (error: any) {
+    console.error('❌ Ошибка при покупке:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      error
+    });
+    setPurchaseMessage(`❌ Ошибка: ${error.message || 'Не удалось купить цветок'}`);
+  } finally {
+    setIsLoading(false);
+    setTimeout(() => setPurchaseMessage(''), 5000);
+  }
+};
+
 
   return (
     <div className="flower-shop">
@@ -196,10 +212,7 @@ const FlowerShop: React.FC = () => {
             </div>
             <img src={flower.image} alt={flower.name} className="flower-image" />
             <h3 className="flower-name">{flower.name}</h3>
-            <p className="flower-income">
-              Доход:
-              <span>{flower.income}</span>
-            </p>
+
             <div className="flower-price">
               <span className="price-value">{flower.price}</span>
               <span className="price-currency">FLW</span>

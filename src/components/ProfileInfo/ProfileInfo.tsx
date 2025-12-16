@@ -65,11 +65,6 @@ const ProfileInfo: React.FC = () => {
     return parseFloat(balance).toFixed(2);
   };
 
-  const shortAddress = (address: string) => {
-    if (!address) return '';
-    return `${address.slice(0, 8)}...${address.slice(-8)}`;
-  };
-
   const handleDisconnect = () => {
     localStorage.removeItem('walletPublicKey');
     window.location.href = '/';
@@ -98,47 +93,10 @@ const ProfileInfo: React.FC = () => {
       <div className="profile-header">
         <div>
           <h2>Мой профиль</h2>
-          <p className="address">{shortAddress(publicKey)}</p>
         </div>
         <button onClick={handleDisconnect} className="disconnect-btn">
           Отключить
         </button>
-      </div>
-
-      <div className="balance-section">
-        <h3>💰 Балансы</h3>
-        <div className="balance-grid">
-          <div className="balance-card highlight">
-            <span className="balance-label">FLW (Контракт)</span>
-            <span className="balance-value">{flwBalance.toFixed(2)}</span>
-          </div>
-          {accountData?.balances.map((balance, index) => (
-            <div key={index} className="balance-card">
-              <span className="balance-label">
-                {balance.asset_type === 'native' ? 'XLM' : balance.asset_code}
-              </span>
-              <span className="balance-value">{formatBalance(balance.balance)}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="stats-section">
-        <h3>📊 Статистика</h3>
-        <div className="stats-grid">
-          <div className="stat-item">
-            <span className="stat-label">Sequence</span>
-            <span className="stat-value">{accountData?.sequence}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">Subentries</span>
-            <span className="stat-value">{accountData?.subentry_count}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">Всего активов</span>
-            <span className="stat-value">{accountData?.balances.length}</span>
-          </div>
-        </div>
       </div>
 
       <div className="address-section">

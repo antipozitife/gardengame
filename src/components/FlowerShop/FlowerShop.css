@@ -65,10 +65,13 @@
 }
 
 .flowers-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+  display: flex;  /* Вместо grid */
+  gap: 25px;
+  margin-bottom: 40px;
+  overflow-x: auto;  /* Прокрутка если не помещаются */
+  padding-bottom: 10px;
+  justify-content: center; /* Центрируем карточки */
+  flex-wrap: nowrap;
 }
 
 .flower-card {
@@ -79,6 +82,9 @@
   transition: all 0.3s ease;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  flex: 1 1 0; /* Одинаковая ширина для всех карточек */
+  min-width: 0; /* Позволяет flex-item сжиматься */
+  max-width: 280px; /* Ограничение максимальной ширины */
 }
 
 .flower-card:hover {
@@ -118,13 +124,25 @@
   z-index: 10;
 }
 
+.flower-image-wrapper {
+  width: 190px;
+  height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0 0 0 25px;
+  overflow: hidden; /* Важно! */
+}
+
 .flower-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 15px;
-  margin-bottom: 1rem;
-  transition: transform 0.3s ease;
+  max-width: 190px; /* Точный размер */
+  max-height: 190px; /* Точный размер */
+  width: auto;
+  height: auto;
+  object-fit: scale-down; /* Уменьшает изображение при необходимости */
+  display: block;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+  animation: floatFlower 3s ease-in-out infinite;
 }
 
 .flower-card:hover .flower-image {

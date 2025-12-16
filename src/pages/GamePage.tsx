@@ -1,27 +1,27 @@
+// src/pages/GamePage.tsx
 import React, { useState, useEffect } from 'react';
 import ProfileInfo from '../components/ProfileInfo/ProfileInfo';
 import FlowerShop from '../components/FlowerShop/FlowerShop';
 import MyGarden from '../components/MyGarden/MyGarden';
-import Footer from '../components/Footer/Footer';
 import WalletModal from '../components/WalletModal/WalletModal';
+import './GamePage.css';
 
 const GamePage: React.FC = () => {
-  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const [publicKey, setPublicKey] = useState<string | null>(null);
+  const [showWalletModal, setShowWalletModal] = useState(false);
 
   useEffect(() => {
     const savedKey = localStorage.getItem('walletPublicKey');
     if (savedKey) {
       setPublicKey(savedKey);
     } else {
-      setIsWalletModalOpen(true);
+      setShowWalletModal(true);
     }
   }, []);
 
-  const handleWalletConnect = (key: string) => {
+  const handleConnect = (key: string) => {
     setPublicKey(key);
-    localStorage.setItem('walletPublicKey', key);
-    setIsWalletModalOpen(false);
+    setShowWalletModal(false);
   };
 
   return (
@@ -29,13 +29,12 @@ const GamePage: React.FC = () => {
       <div className="game-content">
         <ProfileInfo />
         <FlowerShop />
-        <MyGarden publicKey={publicKey} />
+        <MyGarden />
       </div>
-      <Footer />
       <WalletModal
-        isOpen={isWalletModalOpen}
-        onClose={() => setIsWalletModalOpen(false)}
-        onConnect={handleWalletConnect}
+        isOpen={showWalletModal}
+        onClose={() => setShowWalletModal(false)}
+        onConnect={handleConnect}
       />
     </div>
   );

@@ -7,8 +7,9 @@ const server = new StellarSdk.Horizon.Server('https://horizon-testnet.stellar.or
 const sorobanServer = new SorobanRpc.Server('https://soroban-testnet.stellar.org');
 const networkPassphrase = StellarSdk.Networks.TESTNET;
 
-// Замените на адрес вашего развернутого контракта
-const CONTRACT_ADDRESS = 'CAXMICEX25UZYTAUFAX47QHIAW5QNT52LDN3DNS3ZQZB6S3CWBJCOM3Z';
+const CONTRACT_ADDRESS = 'CAQBOJ52ZNZAKGBS7P3RIIL7VUMYRG7NTTOTSYZHEUZEZIXMNNNDNZG4';
+const SHOP_ADDRESS = 'GDGP2QEIYLKNVQO5LSU24Z7Q7GY2JXRG2X4T2KP36VHGAFZDWX3XXYA2';
+const NATIVE_TOKEN_ADDRESS = 'CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC';
 
 // ============ ТИПЫ ============
 declare global {
@@ -79,13 +80,16 @@ async function signTransaction(xdr: string): Promise<string> {
   const result = await window.albedo.tx({ 
     xdr, 
     network: 'testnet',
-    submit: false // Мы отправим сами для контроля
+    submit: false
+    // Уберите pubkey - его нет в этом методе
   });
 
   return result.signed_envelope_xdr;
 }
 
-// ============ ПОКУПКА ЦВЕТКА ============
+
+
+// ============ ПОКУПКА ЦВЕТКА (с контрактом) ============
 export const buyFlower = async (
   publicKey: string,
   flowerId: number,
@@ -93,18 +97,23 @@ export const buyFlower = async (
   flowerName: string
 ): Promise<string> => {
   try {
-    const account = await server.loadAccount(publicKey);
+    const sourceAccount = await server.loadAccount(publicKey);
     const contract = new Contract(CONTRACT_ADDRESS);
-
-    const transaction = new StellarSdk.TransactionBuilder(account, {
+    
+    const priceInStroops = BigInt(Math.floor(price * 10_000_000));
+    
+    const transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
       fee: StellarSdk.BASE_FEE,
       networkPassphrase,
     })
       .addOperation(
         contract.call(
-          'buy_flower',
+          'buy_flower_with_payment',
           StellarAddress.fromString(publicKey).toScVal(),
-          StellarSdk.nativeToScVal(flowerId, { type: 'u32' })
+          StellarSdk.nativeToScVal(flowerId, { type: 'u32' }),
+          StellarSdk.nativeToScVal(priceInStroops, { type: 'i128' }),
+          StellarAddress.fromString(SHOP_ADDRESS).toScVal(),
+          StellarAddress.fromString(NATIVE_TOKEN_ADDRESS).toScVal()
         )
       )
       .setTimeout(300)
@@ -115,47 +124,69 @@ export const buyFlower = async (
     
     const signedTx = StellarSdk.TransactionBuilder.fromXDR(signedXDR, networkPassphrase);
     const response = await sorobanServer.sendTransaction(signedTx as any);
-
-    // Ждем подтверждения транзакции
-    let status;
-    for (let i = 0; i < 30; i++) {
-      try {
-        status = await sorobanServer.getTransaction(response.hash);
-        
-        if (status.status === SorobanRpc.Api.GetTransactionStatus.SUCCESS) {
-          // Сохраняем в локальную БД
-          await gardenDB.addFlower(flowerId, flowerName, publicKey, price, response.hash);
-          console.log(`✅ Транзакция успешна: https://stellar.expert/explorer/testnet/tx/${response.hash}`);
-          return response.hash;
-        }
-        
-        if (status.status === SorobanRpc.Api.GetTransactionStatus.FAILED) {
-          throw new Error('Транзакция не выполнена');
-        }
-      } catch (e) {
-        // Продолжаем ждать
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    }
-
-    throw new Error('Истекло время ожидания транзакции');
-  } catch (error) {
+    
+    console.log(`✅ Покупка отправлена: ${response.hash}`);
+    
+    await gardenDB.addFlower(flowerId, flowerName, publicKey, price, response.hash);
+    
+    return response.hash;
+  } catch (error: any) {
     console.error('Ошибка покупки:', error);
-    throw error;
+    throw new Error(error.message || 'Не удалось купить цветок');
   }
 };
+
 
 // ============ ПОЛИВ ЦВЕТОВ ============
 export const waterFlowers = async (
   publicKey: string,
-  wateringCost?: number // Параметр опциональный для совместимости
+  wateringCost: number = 1
 ): Promise<string> => {
   try {
-    const account = await server.loadAccount(publicKey);
+    // Проверка: можно поливать раз в день
+    const lastWatering = localStorage.getItem(`lastWatering_${publicKey}`);
+    const now = Date.now();
+    
+    if (lastWatering) {
+      const hoursSinceLastWatering = (now - parseInt(lastWatering)) / (1000 * 60 * 60);
+      
+      if (hoursSinceLastWatering < 24) {
+        const hoursLeft = Math.ceil(24 - hoursSinceLastWatering);
+        throw new Error(`Вы уже поливали цветы! Следующий полив через ${hoursLeft} ч.`);
+      }
+    }
+
+    // ТРАНЗАКЦИЯ 1: Оплата полива
+    const sourceAccount1 = await server.loadAccount(publicKey);
+    
+    const paymentTx = new StellarSdk.TransactionBuilder(sourceAccount1, {
+      fee: StellarSdk.BASE_FEE,
+      networkPassphrase,
+    })
+      .addOperation(
+        StellarSdk.Operation.payment({
+          destination: SHOP_ADDRESS,
+          asset: StellarSdk.Asset.native(),
+          amount: wateringCost.toString(),
+        })
+      )
+      .setTimeout(300)
+      .build();
+
+    const signedPaymentXDR = await signTransaction(paymentTx.toXDR());
+    const signedPaymentTx = StellarSdk.TransactionBuilder.fromXDR(signedPaymentXDR, networkPassphrase);
+    const paymentResponse = await server.submitTransaction(signedPaymentTx);
+    
+    console.log(`💧 Оплата полива ${wateringCost} XLM: https://stellar.expert/explorer/testnet/tx/${paymentResponse.hash}`);
+
+    // Ждем подтверждения
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // ТРАНЗАКЦИЯ 2: Вызов контракта
+    const sourceAccount2 = await server.loadAccount(publicKey);
     const contract = new Contract(CONTRACT_ADDRESS);
 
-    const transaction = new StellarSdk.TransactionBuilder(account, {
+    const contractTx = new StellarSdk.TransactionBuilder(sourceAccount2, {
       fee: StellarSdk.BASE_FEE,
       networkPassphrase,
     })
@@ -168,7 +199,7 @@ export const waterFlowers = async (
       .setTimeout(300)
       .build();
 
-    const preparedTx = await sorobanServer.prepareTransaction(transaction);
+    const preparedTx = await sorobanServer.prepareTransaction(contractTx);
     const signedXDR = await signTransaction(preparedTx.toXDR());
     
     const signedTx = StellarSdk.TransactionBuilder.fromXDR(signedXDR, networkPassphrase);
@@ -181,6 +212,7 @@ export const waterFlowers = async (
         status = await sorobanServer.getTransaction(response.hash);
         
         if (status.status === SorobanRpc.Api.GetTransactionStatus.SUCCESS) {
+          localStorage.setItem(`lastWatering_${publicKey}`, now.toString());
           console.log(`✅ Полив выполнен: https://stellar.expert/explorer/testnet/tx/${response.hash}`);
           return response.hash;
         }
@@ -194,11 +226,94 @@ export const waterFlowers = async (
     }
 
     throw new Error('Истекло время ожидания транзакции');
-  } catch (error) {
+  } catch (error: any) {
     console.error('Ошибка полива:', error);
     throw error;
   }
 };
+
+// Полив отдельного цветка
+export const waterSingleFlower = async (
+  publicKey: string,
+  flowerId: number,
+  wateringCost: number = 1
+): Promise<string> => {
+  try {
+    const sourceAccount = await server.loadAccount(publicKey);
+    const contract = new Contract(CONTRACT_ADDRESS);
+    
+    const priceInStroops = BigInt(Math.floor(wateringCost * 10_000_000));
+    
+    const transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
+      fee: StellarSdk.BASE_FEE,
+      networkPassphrase,
+    })
+      .addOperation(
+        contract.call(
+          'water_single_flower',
+          StellarAddress.fromString(publicKey).toScVal(),
+          StellarSdk.nativeToScVal(flowerId, { type: 'u32' }),
+          StellarSdk.nativeToScVal(priceInStroops, { type: 'i128' }),
+          StellarAddress.fromString(SHOP_ADDRESS).toScVal(),
+          StellarAddress.fromString(NATIVE_TOKEN_ADDRESS).toScVal() // Передаем адрес токена
+        )
+      )
+      .setTimeout(300)
+      .build();
+
+    const preparedTx = await sorobanServer.prepareTransaction(transaction);
+    const signedXDR = await signTransaction(preparedTx.toXDR());
+    
+    const signedTx = StellarSdk.TransactionBuilder.fromXDR(signedXDR, networkPassphrase);
+    const response = await sorobanServer.sendTransaction(signedTx as any);
+    
+    console.log(`💧 Полив выполнен: ${response.hash}`);
+    return response.hash;
+    
+  } catch (error: any) {
+    console.error('Ошибка полива:', error);
+    throw error;
+  }
+};
+
+// Получить время последнего полива
+export const getLastWatering = async (
+  publicKey: string,
+  flowerId: number
+): Promise<number> => {
+  try {
+    const contract = new Contract(CONTRACT_ADDRESS);
+    const account = await server.loadAccount(publicKey);
+
+    const transaction = new StellarSdk.TransactionBuilder(account, {
+      fee: StellarSdk.BASE_FEE,
+      networkPassphrase,
+    })
+      .addOperation(
+        contract.call(
+          'get_last_watering',
+          StellarAddress.fromString(publicKey).toScVal(),
+          StellarSdk.nativeToScVal(flowerId, { type: 'u32' })
+        )
+      )
+      .setTimeout(300)
+      .build();
+
+    const preparedTx = await sorobanServer.prepareTransaction(transaction);
+    const result = await sorobanServer.simulateTransaction(preparedTx);
+
+    if (SorobanRpc.Api.isSimulationSuccess(result)) {
+      const timestamp = scValToNative(result.result!.retval);
+      return timestamp || 0;
+    }
+
+    return 0;
+  } catch (error) {
+    console.error('Ошибка получения времени полива:', error);
+    return 0;
+  }
+};
+
 
 // ============ ПРОДАЖА БУКЕТА ============
 export const sellBouquet = async (
@@ -206,16 +321,16 @@ export const sellBouquet = async (
   bouquetPrice: number
 ): Promise<string> => {
   try {
-    // Пока используем простую заглушку
-    // В будущем можно добавить реальную транзакцию продажи
+    // Простая заглушка - возвращаем деньги игроку
+    // В реальном приложении нужен отдельный сервер для этого
     console.log(`💐 Продан букет за ${bouquetPrice} XLM`);
     
-    // Возвращаем фейковый хеш транзакции
-    const fakeHash = 'BOUQUET_SALE_' + Date.now();
-    console.log(`✅ Продажа букета: ${fakeHash}`);
+    // Имитируем успешную продажу
+    const fakeHash = 'BOUQUET_' + Date.now();
     
+    // В будущем здесь должна быть реальная транзакция от сервера
     return fakeHash;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Ошибка продажи букета:', error);
     throw error;
   }
@@ -235,7 +350,6 @@ export const getFLWBalance = async (publicKey: string): Promise<number> => {
   }
 };
 
-// Алиас для обратной совместимости
 export const getBalance = getFLWBalance;
 
 // ============ ПОЛУЧЕНИЕ САДА ============
@@ -272,10 +386,28 @@ export const getUserGarden = async (publicKey: string): Promise<number[]> => {
   }
 };
 
-// ============ ЭКСПОРТ ТИПА ============
-export type WalletType = 'albedo';
+// ============ ПРОВЕРКА ВРЕМЕНИ ПОЛИВА ============
+export const canWaterFlowers = (publicKey: string): { canWater: boolean; hoursLeft: number } => {
+  const lastWatering = localStorage.getItem(`lastWatering_${publicKey}`);
+  
+  if (!lastWatering) {
+    return { canWater: true, hoursLeft: 0 };
+  }
+  
+  const now = Date.now();
+  const hoursSinceLastWatering = (now - parseInt(lastWatering)) / (1000 * 60 * 60);
+  
+  if (hoursSinceLastWatering >= 24) {
+    return { canWater: true, hoursLeft: 0 };
+  }
+  
+  return { 
+    canWater: false, 
+    hoursLeft: Math.ceil(24 - hoursSinceLastWatering) 
+  };
+};
 
-// ============ УНИВЕРСАЛЬНОЕ ПОДКЛЮЧЕНИЕ (только Albedo) ============
+export type WalletType = 'albedo';
 export const connectWallet = async (walletType: WalletType = 'albedo'): Promise<string> => {
   return await connectAlbedo();
 };

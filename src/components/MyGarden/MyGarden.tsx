@@ -1,290 +1,293 @@
-// src/components/MyGarden/MyGarden.tsx
 import React, { useState, useEffect } from 'react';
 import './MyGarden.css';
-import { getFLWBalance, getUserGarden, sellBouquet, waterFlowers } from '../../services/stellar';
+import { waterSingleFlower, getLastWatering, getFLWBalance } from '../../services/stellar';
 import { gardenDB } from '../../services/gardenDB';
+import astra from '../../assets/astra.avif';
+import romashka from '../../assets/romashka.png';
+import gvozdika from '../../assets/gvozdika.png';
+import roza from '../../assets/roza.png';
+import eustoma from '../../assets/eustoma.png';
 
 interface Flower {
   id: number;
   name: string;
+  image: string;
   quantity: number;
-  purchaseDate: number;
-  totalIncome: number;
+  waterLevel: number;
+  rarity: string;
+  rarityColor: string;
+  incomeValue: number;
+  lastWatered: number;
 }
 
-interface Bouquet {
-  id: string;
-  flowers: { id: number; name: string; count: number }[];
-  price: number;
-  createdAt: number;
-}
+type TabType = 'flowers' | 'bouquets';
 
-interface MyGardenProps {
-  publicKey: string | null;
-}
-
-const MyGarden: React.FC<MyGardenProps> = ({ publicKey }) => {
+const MyGarden: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<TabType>('flowers');
   const [flowers, setFlowers] = useState<Flower[]>([]);
-  const [bouquets, setBouquets] = useState<Bouquet[]>([]);
-  const [balance, setBalance] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [activeTab, setActiveTab] = useState<'flowers' | 'bouquets' | 'history'>('flowers');
+  const [loading, setLoading] = useState(false);
+  const [userBalance, setUserBalance] = useState<number | null>(null);
+  const [wateringMessage, setWateringMessage] = useState('');
+  
+  const publicKey = localStorage.getItem('walletPublicKey');
+  const WATERING_COST = 1;
+  const WATERING_COOLDOWN = 24 * 60 * 60; // 24 часа в секундах
 
-  const FLOWER_NAMES = ['Астра', 'Ромашка', 'Гвоздика', 'Роза', 'Эустома'];
-  const FLOWER_PRICES = [10, 25, 50, 100, 200];
-  const WATERING_COST = 5;
+  const flowerData: Record<number, { name: string; image: string; rarity: string; rarityColor: string; incomeValue: number }> = {
+    1: { name: 'Астра', image: astra, rarity: 'Обычная', rarityColor: '#718096', incomeValue: 0.5 },
+    2: { name: 'Ромашка', image: romashka, rarity: 'Необычная', rarityColor: '#48BB78', incomeValue: 1.2 },
+    3: { name: 'Гвоздика', image: gvozdika, rarity: 'Редкая', rarityColor: '#4299E1', incomeValue: 3 },
+    4: { name: 'Роза', image: roza, rarity: 'Эпическая', rarityColor: '#9F7AEA', incomeValue: 7 },
+    5: { name: 'Эустома', image: eustoma, rarity: 'Легендарная', rarityColor: '#ED8936', incomeValue: 15 },
+  };
 
   useEffect(() => {
     if (publicKey) {
       loadGardenData();
-      // Обновляем данные каждые 30 секунд
-      const interval = setInterval(loadGardenData, 30000);
-      return () => clearInterval(interval);
+      fetchBalance();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publicKey]);
 
+  const calculateWaterLevel = (lastWatered: number): number => {
+  if (lastWatered === 0) return 50; // Новый цветок
+  
+  const now = Math.floor(Date.now() / 1000); // текущее время в секундах
+  const timePassed = now - lastWatered;
+  const hoursPassed = timePassed / 3600;
+  
+  // Уменьшаем на 10% каждые 6 часов
+  const decreaseRate = 10 / 6;
+  const decrease = hoursPassed * decreaseRate;
+  
+  const waterLevel = Math.max(0, 100 - decrease);
+  return Math.round(waterLevel);
+};
+
   const loadGardenData = async () => {
-    if (!publicKey) return;
-
+  if (!publicKey) return;
+  try {
     setLoading(true);
-    try {
-      // Получаем баланс FLW из контракта
-      const flwBalance = await getFLWBalance(publicKey);
-      setBalance(flwBalance);
-
-      // Получаем данные о цветах из контракта
-      const gardenData = await getUserGarden(publicKey);
+    const purchases = await gardenDB.getAllFlowers();
+    const userPurchases = purchases.filter((p: any) => p.publicKey === publicKey);
+    
+    const flowerMap = new Map();
+    
+    for (const purchase of userPurchases) {
+      const existing = flowerMap.get(purchase.flowerId);
       
-      // Формируем массив цветов с количеством
-      const loadedFlowers: Flower[] = gardenData
-        .map((quantity, index) => ({
-          id: index + 1,
-          name: FLOWER_NAMES[index],
-          quantity,
-          purchaseDate: Date.now(),
-          totalIncome: quantity * (index + 1) * 0.5,
-        }))
-        .filter((f) => f.quantity > 0);
-
-      setFlowers(loadedFlowers);
-
-      // Загружаем букеты из localStorage
-      const savedBouquets = localStorage.getItem(`bouquets_${publicKey}`);
-      if (savedBouquets) {
-        setBouquets(JSON.parse(savedBouquets));
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        const data = flowerData[purchase.flowerId];
+        
+        // Получаем время последнего полива из контракта
+        let lastWatered = 0;
+        try {
+          const lastWateredBigInt = await getLastWatering(publicKey, purchase.flowerId);
+          // Конвертируем BigInt в number
+          lastWatered = Number(lastWateredBigInt);
+        } catch (error) {
+          console.error(`Ошибка получения времени полива для цветка ${purchase.flowerId}:`, error);
+        }
+        
+        const currentWaterLevel = calculateWaterLevel(lastWatered);
+        
+        flowerMap.set(purchase.flowerId, {
+          id: purchase.flowerId,
+          name: purchase.flowerName,
+          quantity: 1,
+          waterLevel: currentWaterLevel,
+          lastWatered: lastWatered,
+          image: data?.image || '',
+          rarity: data?.rarity || '',
+          rarityColor: data?.rarityColor || '',
+          incomeValue: data?.incomeValue || 0,
+        });
       }
-
-      // Загружаем историю из IndexedDB
-      await loadHistory();
-    } catch (error) {
-      console.error('Ошибка загрузки сада:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+    
+    setFlowers(Array.from(flowerMap.values()));
+  } catch (error) {
+    console.error('Ошибка загрузки сада:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const loadHistory = async () => {
+  const fetchBalance = async () => {
     if (!publicKey) return;
     try {
-      const history = await gardenDB.getFlowersByUser(publicKey);
-      console.log('История покупок:', history);
+      const balance = await getFLWBalance(publicKey);
+      setUserBalance(balance);
     } catch (error) {
-      console.error('Ошибка загрузки истории:', error);
+      console.error('Ошибка получения баланса:', error);
     }
   };
 
-  const handleWater = async () => {
-    if (!publicKey) return;
+  const canWaterFlower = (lastWatered: number): { canWater: boolean; hoursLeft: number } => {
+    if (lastWatered === 0) return { canWater: true, hoursLeft: 0 };
+    
+    const now = Math.floor(Date.now() / 1000);
+    const timeSinceWatering = now - lastWatered;
+    
+    if (timeSinceWatering >= WATERING_COOLDOWN) {
+      return { canWater: true, hoursLeft: 0 };
+    }
+    
+    const hoursLeft = Math.ceil((WATERING_COOLDOWN - timeSinceWatering) / 3600);
+    return { canWater: false, hoursLeft };
+  };
 
-    if (balance < WATERING_COST) {
-      alert(`Недостаточно FLW для полива! Нужно ${WATERING_COST} FLW`);
+  const handleWaterFlower = async (flowerId: number, lastWatered: number) => {
+    if (!publicKey) return;
+    
+    const waterCheck = canWaterFlower(lastWatered);
+    if (!waterCheck.canWater) {
+      setWateringMessage(`⏳ Этот цветок можно полить через ${waterCheck.hoursLeft} ч.`);
+      setTimeout(() => setWateringMessage(''), 3000);
+      return;
+    }
+
+    if (userBalance !== null && userBalance < WATERING_COST) {
+      setWateringMessage('❌ Недостаточно FLW!');
+      setTimeout(() => setWateringMessage(''), 3000);
       return;
     }
 
     setLoading(true);
+    setWateringMessage('⏳ Поливаем цветок...');
+    
     try {
-      await waterFlowers(publicKey, WATERING_COST);
-      alert('Цветы политы! 💧');
+      const txHash = await waterSingleFlower(publicKey, flowerId, WATERING_COST);
+      console.log(`✅ Цветок полит: ${txHash}`);
+      
+      setWateringMessage('✅ Цветок полит! 💧');
+      
+      // Обновляем данные
       await loadGardenData();
-    } catch (error) {
-      console.error('Ошибка полива:', error);
-      alert('Ошибка при поливе цветов');
+      await fetchBalance();
+      
+      setTimeout(() => setWateringMessage(''), 3000);
+    } catch (error: any) {
+      setWateringMessage(`❌ Ошибка: ${error.message}`);
+      setTimeout(() => setWateringMessage(''), 5000);
     } finally {
       setLoading(false);
     }
-  };
-
-  const createBouquet = () => {
-    if (flowers.length === 0) {
-      alert('У вас нет цветов для букета!');
-      return;
-    }
-
-    const bouquetFlowers = flowers.map((f) => ({
-      id: f.id,
-      name: f.name,
-      count: Math.min(f.quantity, 3),
-    }));
-
-    const price = bouquetFlowers.reduce((sum, f) => sum + f.count * FLOWER_PRICES[f.id - 1], 0);
-
-    const newBouquet: Bouquet = {
-      id: Date.now().toString(),
-      flowers: bouquetFlowers,
-      price,
-      createdAt: Date.now(),
-    };
-
-    const updatedBouquets = [...bouquets, newBouquet];
-    setBouquets(updatedBouquets);
-    
-    if (publicKey) {
-      localStorage.setItem(`bouquets_${publicKey}`, JSON.stringify(updatedBouquets));
-    }
-    
-    alert('Букет создан! 💐');
-  };
-
-  const handleSellBouquet = async (bouquet: Bouquet) => {
-    if (!publicKey) return;
-
-    setLoading(true);
-    try {
-      await sellBouquet(publicKey, bouquet.price);
-
-      // Удаляем букет
-      const updatedBouquets = bouquets.filter((b) => b.id !== bouquet.id);
-      setBouquets(updatedBouquets);
-      localStorage.setItem(`bouquets_${publicKey}`, JSON.stringify(updatedBouquets));
-
-      alert(`Букет продан за ${bouquet.price} FLW! 💐`);
-      await loadGardenData();
-    } catch (error) {
-      console.error('Ошибка продажи:', error);
-      alert('Ошибка при продаже букета');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString('ru-RU');
   };
 
   if (!publicKey) {
     return (
       <div className="my-garden">
-        <p>Подключите кошелек для просмотра сада</p>
+        <h2 className="garden-title">🌸 Мой сад</h2>
+        <div className="empty">Подключите кошелек для просмотра сада</div>
       </div>
     );
   }
 
-  if (loading) {
-    return (
-      <div className="my-garden">
-        <p>Загрузка вашего сада...</p>
-      </div>
-    );
-  }
+  const totalFlowers = flowers.reduce((sum, f) => sum + f.quantity, 0);
 
   return (
     <div className="my-garden">
-      <div className="garden-header">
-        <h2>🌻 Мой сад</h2>
-        <div className="balance-info">
-          <span>Баланс: {balance.toFixed(2)} FLW</span>
-          <button onClick={handleWater} disabled={loading} className="water-all-btn">
-            💧 Полить все ({WATERING_COST} FLW)
-          </button>
+      <h2 className="garden-title">🌸 Мой сад</h2>
+      
+      {userBalance !== null && (
+        <div className="balance-display">
+          <span>Ваш баланс:</span>
+          <strong>{userBalance.toFixed(2)} FLW</strong>
         </div>
-      </div>
+      )}
+
+      {wateringMessage && (
+        <div className="watering-message">{wateringMessage}</div>
+      )}
 
       <div className="tabs">
         <button
           className={activeTab === 'flowers' ? 'active' : ''}
           onClick={() => setActiveTab('flowers')}
         >
-          Мои цветы ({flowers.length})
+          🌺 Мои цветы ({totalFlowers})
         </button>
         <button
           className={activeTab === 'bouquets' ? 'active' : ''}
           onClick={() => setActiveTab('bouquets')}
         >
-          Букеты ({bouquets.length})
-        </button>
-        <button
-          className={activeTab === 'history' ? 'active' : ''}
-          onClick={() => setActiveTab('history')}
-        >
-          История
+          💐 Собранные букеты (0)
         </button>
       </div>
 
       {activeTab === 'flowers' && (
-        <div className="flowers-list">
+        <>
           {flowers.length === 0 ? (
-            <p className="empty">Купите свои первые цветы в магазине!</p>
+            <div className="empty">
+              У вас пока нет цветов. Купите первый цветок в магазине! 🛒
+            </div>
           ) : (
-            <>
-              {flowers.map((flower) => (
-                <div key={flower.id} className="flower-item">
-                  <h3>🌸 {flower.name}</h3>
-                  <p>
-                    <strong>Количество:</strong> {flower.quantity}
-                  </p>
-                  <p>
-                    <strong>Заработано:</strong> {flower.totalIncome.toFixed(2)} FLW
-                  </p>
-                  <p className="date">Куплен: {formatDate(flower.purchaseDate)}</p>
-                </div>
-              ))}
-              <button onClick={createBouquet} className="create-bouquet-btn" disabled={loading}>
-                Создать букет
-              </button>
-            </>
+            <div className="flowers-grid">
+              {flowers.map((flower) => {
+                const waterCheck = canWaterFlower(flower.lastWatered);
+                
+                return (
+                  <div key={flower.id} className="flower-card">
+                    <div className="rarity-badge" style={{ backgroundColor: flower.rarityColor }}>
+                      {flower.rarity}
+                    </div>
+                    
+                    <div className="flower-image-wrapper">
+                      <img src={flower.image} alt={flower.name} className="flower-image" />
+                    </div>
+                    
+                    <h3 className="flower-name">{flower.name}</h3>
+                    
+                    <div className="flower-income">
+                      <span>Количество:</span>
+                      <span>{flower.quantity} шт.</span>
+                    </div>
+                    
+                    <div className="flower-income">
+                      <span>Доход:</span>
+                      <span>+{flower.incomeValue} FLW/день</span>
+                    </div>
+
+                    <div className="moisture-level">
+                      <div className="moisture-label">
+                        <span>💧 Влажность почвы</span>
+                        <strong>{flower.waterLevel}%</strong>
+                      </div>
+                      <div className="moisture-bar">
+                        <div 
+                          className="moisture-fill" 
+                          style={{ 
+                            width: `${flower.waterLevel}%`,
+                            backgroundColor: flower.waterLevel > 50 ? '#48bb78' : '#f56565'
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      className="water-button"
+                      onClick={() => handleWaterFlower(flower.id, flower.lastWatered)}
+                      disabled={loading || !waterCheck.canWater}
+                    >
+                      {!waterCheck.canWater 
+                        ? `⏳ Через ${waterCheck.hoursLeft} ч.`
+                        : `💧 Полить за ${WATERING_COST} FLW`
+                      }
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
           )}
-        </div>
+        </>
       )}
 
       {activeTab === 'bouquets' && (
-        <div className="bouquets-list">
-          {bouquets.length === 0 ? (
-            <p className="empty">
-              У вас пока нет букетов
-              <br />
-              Соберите букет из ваших цветов на вкладке "Мои цветы"
-            </p>
-          ) : (
-            bouquets.map((bouquet) => (
-              <div key={bouquet.id} className="bouquet-item">
-                <h3>💐 Букет</h3>
-                <div className="bouquet-flowers">
-                  {bouquet.flowers.map((f) => (
-                    <span key={f.id}>
-                      {f.name} x{f.count}
-                    </span>
-                  ))}
-                </div>
-                <p>
-                  <strong>Цена:</strong> {bouquet.price} FLW
-                </p>
-                <p className="date">Создан: {formatDate(bouquet.createdAt)}</p>
-                <button
-                  onClick={() => handleSellBouquet(bouquet)}
-                  disabled={loading}
-                  className="sell-btn"
-                >
-                  {loading ? 'Продажа...' : 'Продать'}
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-
-      {activeTab === 'history' && (
-        <div className="history-list">
-          <p className="empty">История загружается из контракта...</p>
+        <div className="empty">
+          Функция создания букетов скоро появится! 💐
         </div>
       )}
     </div>

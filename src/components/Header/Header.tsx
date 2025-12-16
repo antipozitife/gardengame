@@ -115,7 +115,7 @@ const Header: React.FC = () => {
           </div>
         </Link>
 
-        <span className="header-text">Play & Earn</span>
+        <span className="header-text">Play with Crypto</span>
       </div>
     </header>
   );
