@@ -1,133 +1,176 @@
-# 🌸 Flower Garden
+# 🌷 Garden Game
 
-Браузерная игра-симулятор сада на блокчейне Stellar. Покупайте цветы за тестовые XLM, поливайте их и следите за садом через кошелёк Albedo. Проект создан как pet-проект для портфолио junior frontend-разработчика.
+**Garden Game** — это браузерная игра, в которой пользователь выращивает виртуальный сад, покупает цветы за внутриигровую валюту и взаимодействует со смарт-контрактом в сети **Stellar Soroban** через криптокошелек.
 
-> **Live Demo:** _добавьте ссылку после деплоя (Vercel / Netlify / GitHub Pages)_
+Проект разработан в качестве **pet-проекта** для демонстрации навыков Frontend-разработки и работы с Web3-технологиями.
 
-## Скриншоты
+## 🚀 Демо
 
-| Лендинг | Игра — магазин | Игра — сад | Профиль |
-|---------|----------------|------------|---------|
-| ![Лендинг](docs/screenshots/landing.png) | ![Магазин](docs/screenshots/shop.png) | ![Сад](docs/screenshots/garden.png) | ![Профиль](docs/screenshots/profile.png) |
+🌐 **Приложение:** https://gardengame-he2593xl0-antipozitifes-projects.vercel.app
 
-![Игровой процесс](docs/screenshots/gameplay.gif)
+---
 
-> Скриншоты и GIF лежат в `docs/screenshots/`. Инструкция по созданию — в [docs/screenshots/README.md](docs/screenshots/README.md).
+# 📌 Возможности
 
-## Стек
+* 🌼 Покупка цветов
+* 🌱 Выращивание собственного сада
+* 💰 Начисление игровой валюты
+* 🔗 Подключение Stellar-кошелька
+* ✍️ Подписание транзакций через Albedo
+* ⛓️ Взаимодействие со смарт-контрактом Soroban
+* 💾 Сохранение состояния игры в IndexedDB
+* 📱 Адаптивный интерфейс
+* ✅ Покрытие части логики тестами
 
-| Категория | Технологии |
-|-----------|------------|
-| Frontend | React 18, TypeScript, React Router |
-| Сборка | Create React App |
-| Blockchain | Stellar SDK, Soroban smart contract, Albedo wallet |
-| Хранение | IndexedDB (история покупок), localStorage (сессия кошелька) |
-| API | Horizon Testnet, CoinGecko |
-| Тесты | Jest, React Testing Library |
-| Контракт | Rust (Soroban) — `contract/` |
+---
 
-## Основные возможности
+# 🛠️ Стек технологий
 
-- **Лендинг** — слайдер, описание игры, виды цветов, блок про XLM
-- **Подключение кошелька** — Albedo (Stellar testnet)
-- **Магазин цветов** — покупка через Soroban-контракт
-- **Мой сад** — просмотр купленных цветов, полив, уровень влажности
-- **Профиль** — публичный ключ, баланс XLM, отключение кошелька
-- **Единый источник данных** — цветы описаны в `src/data/flowers.ts`
-- **WalletContext** — централизованное управление состоянием кошелька
+### Frontend
 
-## Быстрый старт
+* React
+* TypeScript
+* React Router
+* Context API
+* CSS Modules
 
-### Требования
+### Web3
 
-- Node.js 18+
-- npm 9+
-- Кошелёк [Albedo](https://albedo.link/) и тестовые XLM ([Friendbot](https://laboratory.stellar.org/#account-creator?network=test))
+* Stellar SDK
+* Soroban Smart Contracts
+* Albedo Wallet
 
-### Установка и запуск
+### Хранение данных
+
+* IndexedDB
+
+### Тестирование
+
+* Jest
+* React Testing Library
+
+### Инструменты разработки
+
+* ESLint
+* Prettier
+* npm
+
+---
+
+# 📂 Структура проекта
+
+```text
+src/
+│
+├── components/      # Переиспользуемые компоненты
+├── context/         # Context API
+├── pages/           # Страницы приложения
+├── services/        # Работа с API и блокчейном
+├── data/            # Игровые данные
+├── utils/           # Вспомогательные функции
+├── assets/          # Изображения и ресурсы
+└── tests/           # Тесты
+```
+
+---
+
+# ⚙️ Запуск проекта
+
+## Клонирование
 
 ```bash
-git clone <url-репозитория>
-cd gardengame
+git clone <repository-url>
+cd garden-game
+```
+
+## Установка зависимостей
+
+```bash
 npm install
+```
+
+## Запуск режима разработки
+
+```bash
 npm start
 ```
 
-Приложение откроется на [http://localhost:3000](http://localhost:3000).
+После запуска приложение будет доступно по адресу:
 
-### Другие команды
+```
+http://localhost:3000
+```
+
+---
+
+# 🧪 Тестирование
+
+Запуск тестов:
 
 ```bash
-npm run build     # production-сборка
-npm run test      # тесты в watch-режиме
-npm run test:ci   # тесты для CI (без watch)
-npm run lint      # ESLint
-npm run format    # Prettier
+npm test
 ```
 
-### Переменные окружения
+---
 
-Скопируйте `.env.example` в `.env` при необходимости:
+# 📦 Сборка проекта
 
 ```bash
-cp .env.example .env
+npm run build
 ```
 
-## Структура проекта
+---
 
-```
-gardengame/
-├── public/                 # Статика
-├── contract/               # Soroban smart contract (Rust)
-├── docs/screenshots/       # Скриншоты для README
-├── src/
-│   ├── components/         # UI-компоненты
-│   │   ├── FlowerShop/     # Магазин
-│   │   ├── MyGarden/       # Сад
-│   │   ├── WalletModal/    # Модалка кошелька
-│   │   └── XLMToken/       # Секция про XLM на лендинге
-│   ├── context/
-│   │   └── WalletContext.tsx
-│   ├── data/
-│   │   └── flowers.ts      # Единый каталог цветов
-│   ├── pages/
-│   │   ├── MainPage.tsx    # Лендинг
-│   │   └── GamePage.tsx    # Игровая страница
-│   ├── services/
-│   │   ├── stellar.ts      # Stellar / Soroban API
-│   │   ├── gardenDB.ts     # IndexedDB
-│   │   └── priceService.ts # CoinGecko
-│   └── utils/
-│       └── getErrorMessage.ts
-├── package.json
-└── README.md
-```
+# 🌐 Используемые технологии
 
-## Тесты
+Проект демонстрирует работу со следующими возможностями современной frontend-разработки:
 
-Покрыты ключевые сценарии:
+* компонентная архитектура React;
+* строгая типизация TypeScript;
+* управление глобальным состоянием через Context API;
+* маршрутизация React Router;
+* взаимодействие с внешними API;
+* интеграция с блокчейном Stellar;
+* работа с криптокошельком;
+* локальное хранение данных в IndexedDB;
+* модульное тестирование;
+* организация структуры большого React-проекта.
 
-- `FlowerShop` — без кошелька, disabled-кнопки «Купить», открытие модалки
-- `WalletModal` — открытие / закрытие
-- `WalletContext` — connect / disconnect / restore из localStorage
-- `flowers.ts` — данные каталога
-- `getErrorMessage` — человекочитаемые ошибки
+---
 
-```bash
-npm run test:ci
-```
+# 🎯 Цель проекта
 
-## Валюта в игре
+Основная цель проекта — получить практический опыт разработки полноценного SPA-приложения с использованием современных технологий frontend-разработки и интеграции с Web3.
 
-Игра использует **нативный XLM** (Stellar Lumens) в testnet. Отдельный токен FLW не реализован — это осознанное решение для MVP.
+Во время разработки особое внимание уделялось:
 
-## Roadmap (запланировано)
+* чистой архитектуре проекта;
+* разделению бизнес-логики и UI;
+* типизации данных;
+* переиспользованию компонентов;
+* удобству сопровождения кода;
+* написанию тестов для ключевой логики приложения.
 
-- Создание и продажа букетов
-- Деплой на Vercel/Netlify
-- Lazy-loading игровой страницы
-- Кастомный токен (опционально)
+---
 
-## Лицензия
+# 📈 Планы по развитию
 
-MIT (или укажите свою лицензию)
+В будущем планируется добавить:
+
+* улучшенную систему достижений;
+* анимации интерфейса;
+* звуковые эффекты;
+* новые виды растений;
+* ежедневные награды;
+* таблицу лидеров;
+* расширенное взаимодействие со смарт-контрактом.
+
+---
+
+# 👩‍💻 Автор
+
+Проект разработан в качестве pet-проекта для портфолио Junior Frontend Developer.
+
+Буду рада любым отзывам, предложениям и замечаниям.
+
+
