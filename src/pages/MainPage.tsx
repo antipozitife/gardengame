@@ -4,7 +4,7 @@ import Header from '../components/Header/Header';
 import Hero from '../components/Hero/Hero';
 import HowToPlay from '../components/HowToPlay/HowToPlay';
 import FlowerTypes from '../components/FlowerTypes/FlowerTypes';
-import FLWToken from '../components/FLWToken/FLWToken';
+import XLMToken from '../components/XLMToken/XLMToken';
 import Footer from '../components/Footer/Footer';
 
 const MainPage: React.FC = () => {
@@ -14,7 +14,7 @@ const MainPage: React.FC = () => {
       <Hero />
       <HowToPlay />
       <FlowerTypes />
-      <FLWToken />
+      <XLMToken />
       <Footer />
     </SlideProvider>
   );

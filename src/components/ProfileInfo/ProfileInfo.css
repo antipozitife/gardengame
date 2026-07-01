@@ -201,6 +201,12 @@
   transform: translateY(-2px);
 }
 
+.copy-message {
+  color: #c6f6d5;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
 @media (max-width: 768px) {
   .profile-info {
     padding: 1rem;

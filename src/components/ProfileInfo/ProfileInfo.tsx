@@ -1,41 +1,28 @@
-// src/components/ProfileInfo/ProfileInfo.tsx
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useWallet } from '../../context/WalletContext';
+import { getXLMBalance } from '../../services/stellar';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 import './ProfileInfo.css';
-import { getFLWBalance } from '../../services/stellar';
-
-interface Balance {
-  asset_type: string;
-  asset_code?: string;
-  balance: string;
-}
-
-interface AccountData {
-  id: string;
-  balances: Balance[];
-  sequence: string;
-  subentry_count: number;
-}
 
 const ProfileInfo: React.FC = () => {
-  const [accountData, setAccountData] = useState<AccountData | null>(null);
-  const [flwBalance, setFlwBalance] = useState<number>(0);
+  const { publicKey, disconnectWallet } = useWallet();
+  const navigate = useNavigate();
+  const [xlmBalance, setXlmBalance] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [publicKey, setPublicKey] = useState('');
+  const [copyMessage, setCopyMessage] = useState('');
 
   useEffect(() => {
-    const storedKey = localStorage.getItem('walletPublicKey');
-    if (storedKey) {
-      setPublicKey(storedKey);
-      fetchAccountData(storedKey);
-      fetchFLWBalance(storedKey);
+    if (publicKey) {
+      void loadProfile(publicKey);
     } else {
       setLoading(false);
-      setError('Кошелек не подключен');
+      setError('Кошелек не подключен. Подключите Albedo, чтобы играть.');
     }
-  }, []);
+  }, [publicKey]);
 
-  const fetchAccountData = async (key: string) => {
+  const loadProfile = async (key: string) => {
     setLoading(true);
     setError('');
     try {
@@ -43,31 +30,30 @@ const ProfileInfo: React.FC = () => {
       if (!response.ok) {
         throw new Error('Не удалось загрузить данные аккаунта');
       }
-      const data = await response.json();
-      setAccountData(data);
+      const balance = await getXLMBalance(key);
+      setXlmBalance(balance);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Произошла ошибка');
+      setError(getErrorMessage(err, 'Не удалось загрузить профиль'));
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchFLWBalance = async (key: string) => {
-    try {
-      const balance = await getFLWBalance(key);
-      setFlwBalance(balance);
-    } catch (error) {
-      console.error('Ошибка получения FLW баланса:', error);
-    }
-  };
-
-  const formatBalance = (balance: string) => {
-    return parseFloat(balance).toFixed(2);
-  };
-
   const handleDisconnect = () => {
-    localStorage.removeItem('walletPublicKey');
-    window.location.href = '/';
+    disconnectWallet();
+    navigate('/');
+  };
+
+  const handleCopy = async () => {
+    if (!publicKey) return;
+    try {
+      await navigator.clipboard.writeText(publicKey);
+      setCopyMessage('Адрес скопирован!');
+      setTimeout(() => setCopyMessage(''), 2000);
+    } catch {
+      setCopyMessage('Не удалось скопировать адрес');
+      setTimeout(() => setCopyMessage(''), 2000);
+    }
   };
 
   if (loading) {
@@ -83,7 +69,7 @@ const ProfileInfo: React.FC = () => {
       <div className="profile-info error">
         <div className="error-icon">⚠️</div>
         <p>{error}</p>
-        <button onClick={() => (window.location.href = '/')}>Подключить кошелек</button>
+        <button onClick={() => navigate('/')}>На главную</button>
       </div>
     );
   }
@@ -103,15 +89,14 @@ const ProfileInfo: React.FC = () => {
         <p>Публичный ключ:</p>
         <div className="address-box">
           <code>{publicKey}</code>
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(publicKey);
-              alert('Адрес скопирован!');
-            }}
-          >
-            📋 Копировать
-          </button>
+          <button onClick={handleCopy}>📋 Копировать</button>
         </div>
+        {copyMessage && <p className="copy-message">{copyMessage}</p>}
+      </div>
+
+      <div className="address-section">
+        <p>Баланс:</p>
+        <strong>{xlmBalance.toFixed(2)} XLM</strong>
       </div>
     </div>
   );

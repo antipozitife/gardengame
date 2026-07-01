@@ -86,6 +86,23 @@
   transform: translateY(0);
 }
 
+.wallet-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.modal-error {
+  background: #fff5f5;
+  border: 1px solid #fc8181;
+  border-radius: 10px;
+  color: #c53030;
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  text-align: center;
+}
+
 /* Адаптивность */
 @media (max-width: 600px) {
   .modal-content {

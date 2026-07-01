@@ -11,7 +11,6 @@
     "@types/jest": "^27.5.2",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
-    "axios": "^1.6.2",
     "idb": "^8.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -24,7 +23,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test:ci": "CI=true react-scripts test --watchAll=false",
+    "eject": "react-scripts eject",
+    "lint": "eslint src --ext .ts,.tsx",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"README.md\""
   },
   "eslintConfig": {
     "extends": [
@@ -46,8 +48,6 @@
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2"
+    "prettier": "^3.4.2"
   }
 }

@@ -1,29 +1,28 @@
-.flw-token {
+.xlm-token {
   background: #ffffff;
   padding: 60px 80px;
   position: relative;
 }
 
-.flw-container {
+.xlm-container {
   max-width: 1400px;
   margin: 0 auto;
 }
 
-.flw-content {
+.xlm-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
   align-items: stretch;
 }
 
-/* ЛЕВАЯ ЧАСТЬ */
-.flw-left {
+.xlm-left {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.flw-title {
+.xlm-title {
   font-size: 4rem;
   font-weight: 700;
   color: #4A5A3A;
@@ -33,27 +32,26 @@
   gap: 15px;
 }
 
-.flw-icon {
+.xlm-icon {
   font-size: 4rem;
   animation: bounce 2s ease-in-out infinite;
 }
 
-.flw-subtitle {
+.xlm-subtitle {
   font-size: 2.2rem;
   font-weight: 700;
   color: #4A5A3A;
   margin: 0 0 10px;
 }
 
-.flw-text {
+.xlm-text {
   font-size: 1.3rem;
   color: #6B7A4B;
   line-height: 1.8;
   margin: 0;
 }
 
-/* ПРЕИМУЩЕСТВА */
-.flw-features {
+.xlm-features {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 18px;
@@ -91,14 +89,13 @@
   margin: 0;
 }
 
-/* ПРАВАЯ ЧАСТЬ */
-.flw-right {
+.xlm-right {
   display: flex;
   align-items: stretch;
   justify-content: center;
 }
 
-.flw-stats-card {
+.xlm-stats-card {
   background: linear-gradient(135deg, #8B9A6B 0%, #6B7A4B 100%);
   border-radius: 25px;
   padding: 60px 40px;
@@ -140,7 +137,6 @@
   line-height: 1.3;
 }
 
-/* АНИМАЦИИ */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -152,21 +148,20 @@
   }
 }
 
-/* АДАПТИВНОСТЬ */
 @media (max-width: 1024px) {
-  .flw-title {
+  .xlm-title {
     font-size: 3.5rem;
   }
 
-  .flw-content {
+  .xlm-content {
     gap: 30px;
   }
 
-  .flw-subtitle {
+  .xlm-subtitle {
     font-size: 2rem;
   }
 
-  .flw-text {
+  .xlm-text {
     font-size: 1.2rem;
   }
 
@@ -175,7 +170,7 @@
     padding: 22px;
   }
 
-  .flw-stats-card {
+  .xlm-stats-card {
     padding: 50px 35px;
   }
 
@@ -189,28 +184,28 @@
 }
 
 @media (max-width: 768px) {
-  .flw-token {
+  .xlm-token {
     padding: 50px 20px;
   }
 
-  .flw-content {
+  .xlm-content {
     grid-template-columns: 1fr;
     gap: 40px;
   }
 
-  .flw-title {
+  .xlm-title {
     font-size: 2.8rem;
   }
 
-  .flw-subtitle {
+  .xlm-subtitle {
     font-size: 1.8rem;
   }
 
-  .flw-text {
+  .xlm-text {
     font-size: 1.1rem;
   }
 
-  .flw-features {
+  .xlm-features {
     grid-template-columns: 1fr;
     gap: 15px;
   }
@@ -228,7 +223,7 @@
     font-size: 1.2rem;
   }
 
-  .flw-stats-card {
+  .xlm-stats-card {
     padding: 40px 30px;
   }
 
@@ -242,30 +237,30 @@
 }
 
 @media (max-width: 480px) {
-  .flw-token {
+  .xlm-token {
     padding: 40px 15px;
   }
 
-  .flw-title {
+  .xlm-title {
     font-size: 2.2rem;
     flex-direction: column;
     text-align: center;
   }
 
-  .flw-icon {
+  .xlm-icon {
     font-size: 2.2rem;
   }
 
-  .flw-subtitle {
+  .xlm-subtitle {
     font-size: 1.6rem;
     text-align: center;
   }
 
-  .flw-text {
+  .xlm-text {
     font-size: 1rem;
   }
 
-  .flw-features {
+  .xlm-features {
     grid-template-columns: 1fr;
     gap: 12px;
   }
@@ -283,7 +278,7 @@
     font-size: 1.1rem;
   }
 
-  .flw-stats-card {
+  .xlm-stats-card {
     padding: 35px 25px;
   }
 

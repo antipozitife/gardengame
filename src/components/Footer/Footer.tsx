@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
               <a href="#flower-types-section">Виды цветов</a>
             </li>
             <li>
-              <a href="#flw-token-section">FLW Token</a>
+              <a href="#xlm-token-section">XLM</a>
             </li>
           </ul>
         </div>

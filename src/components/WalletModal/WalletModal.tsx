@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useWallet } from '../../context/WalletContext';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 import './WalletModal.css';
-import { connectAlbedo } from '../../services/stellar';
 
 interface WalletModalProps {
   isOpen: boolean;
@@ -10,36 +11,46 @@ interface WalletModalProps {
 }
 
 const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose, onConnect }) => {
+  const { connectWallet } = useWallet();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isConnecting, setIsConnecting] = useState(false);
+
   if (!isOpen) return null;
 
   const handleConnect = async () => {
+    setErrorMessage('');
+    setIsConnecting(true);
+
     try {
-      const publicKey = await connectAlbedo();
+      const publicKey = await connectWallet();
       onConnect(publicKey);
     } catch (error) {
-      console.error('Ошибка подключения:', error);
-      alert('Не удалось подключить кошелек');
+      setErrorMessage(getErrorMessage(error, 'Не удалось подключить кошелек'));
+    } finally {
+      setIsConnecting(false);
     }
   };
 
   const modalContent = (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>
+        <button className="modal-close" onClick={onClose} aria-label="Закрыть">
           ×
         </button>
         <h2 className="modal-title">Подключить кошелек</h2>
         <p className="modal-description">
           Используйте Albedo для безопасного взаимодействия с Stellar
         </p>
-        <button className="wallet-button" onClick={handleConnect}>
-          🔗 Albedo
+
+        {errorMessage && <p className="modal-error">{errorMessage}</p>}
+
+        <button className="wallet-button" onClick={handleConnect} disabled={isConnecting}>
+          {isConnecting ? '⏳ Подключение...' : '🔗 Albedo'}
         </button>
       </div>
     </div>
   );
 
-  // Рендерим модальное окно в корень document.body
   return createPortal(modalContent, document.body);
 };
 

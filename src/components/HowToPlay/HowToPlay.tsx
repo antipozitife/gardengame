@@ -1,29 +1,29 @@
 import React from 'react';
-
 import './HowToPlay.css';
+import dzhoistik from '../../assets/dzhoistik.png';
+import { getFlowerById } from '../../data/flowers';
 
-import dzhoistik from '../../assets/dzhoistik.png'
-
-const HowToPlay: React.FC = () => {
+const WATERING_COST = 1;
+const astraPrice = getFlowerById(1)?.price ?? 10;
 
 const steps = [
   {
     id: 1,
     icon: '🌱',
     title: 'Купи цветок',
-    description: 'Начни с простой астры за 1 FLW токен',
+    description: `Начни с простой астры за ${astraPrice} XLM`,
   },
   {
     id: 2,
     icon: '💧',
     title: 'Поливай его',
-    description: 'Поливай свой цветок каждый день за 0.5 FLW',
+    description: `Поливай свой цветок раз в день за ${WATERING_COST} XLM`,
   },
   {
     id: 3,
-    icon: '💐',
-    title: 'Собирай букеты',
-    description: 'Продавай букеты дороже чем одиночный цветок',
+    icon: '💰',
+    title: 'Получай доход',
+    description: 'Каждый цветок приносит XLM каждый день',
   },
   {
     id: 4,
@@ -33,27 +33,27 @@ const steps = [
   },
 ];
 
-return (
-  <section className="how-to-play" id="how-to-play-section">
-    <div className="how-to-play-container">
-      <h2 className="how-to-play-title">
-        <img src={dzhoistik} alt="Джойстик" className="title-icon" />
-        Как играть?
-      </h2>
-      <div className="steps-grid">
-        {steps.map((step) => (
-          <div key={step.id} className="step-card">
-            <div className="step-number">{step.id}</div>
-            <div className="step-icon">{step.icon}</div>
-            <h3 className="step-title">{step.title}</h3>
-            <p className="step-description">{step.description}</p>
-          </div>
-        ))}
+const HowToPlay: React.FC = () => {
+  return (
+    <section className="how-to-play" id="how-to-play-section">
+      <div className="how-to-play-container">
+        <h2 className="how-to-play-title">
+          <img src={dzhoistik} alt="Джойстик" className="title-icon" />
+          Как играть?
+        </h2>
+        <div className="steps-grid">
+          {steps.map((step) => (
+            <div key={step.id} className="step-card">
+              <div className="step-number">{step.id}</div>
+              <div className="step-icon">{step.icon}</div>
+              <h3 className="step-title">{step.title}</h3>
+              <p className="step-description">{step.description}</p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-);
-
+    </section>
+  );
 };
 
 export default HowToPlay;

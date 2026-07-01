@@ -1,36 +1,33 @@
 import React from 'react';
-import './FLWToken.css';
-import { getXLMPrice, getTokenStats, TokenStats } from '../../services/priceService';
+import './XLMToken.css';
+import { getTokenStats, TokenStats } from '../../services/priceService';
 
-const FLWToken: React.FC = () => {
-  const [xlmPrice, setXlmPrice] = React.useState<number>(0);
+const XLMToken: React.FC = () => {
   const [tokenStats, setTokenStats] = React.useState<TokenStats | null>(null);
 
   React.useEffect(() => {
-    getXLMPrice().then(setXlmPrice);
     getTokenStats().then(setTokenStats);
   }, []);
 
   return (
-    <section className="flw-token" id="flw-token-section">
-      <div className="flw-container">
-        <div className="flw-content">
-          {/* ЛЕВАЯ ЧАСТЬ */}
-          <div className="flw-left">
-            <h2 className="flw-title">
-              <span className="flw-icon">💰</span>
-              FLW Token
+    <section className="xlm-token" id="xlm-token-section">
+      <div className="xlm-container">
+        <div className="xlm-content">
+          <div className="xlm-left">
+            <h2 className="xlm-title">
+              <span className="xlm-icon">💰</span>
+              XLM
             </h2>
-            
-            <div className="flw-description">
-              <h3 className="flw-subtitle">Что такое FLW?</h3>
-              <p className="flw-text">
-                FLW (Flower Token) - внутригровой токен на блокчейне Stellar. Используй его для покупки цветов, полива и торговли.
+
+            <div className="xlm-description">
+              <h3 className="xlm-subtitle">Что такое XLM?</h3>
+              <p className="xlm-text">
+                XLM (Stellar Lumens) — нативная криптовалюта сети Stellar. В игре она используется
+                для покупки цветов, полива и других действий в testnet.
               </p>
             </div>
 
-            {/* ПРЕИМУЩЕСТВА */}
-            <div className="flw-features">
+            <div className="xlm-features">
               <div className="feature-item">
                 <div className="feature-icon">⚡</div>
                 <div className="feature-text">
@@ -48,7 +45,7 @@ const FLWToken: React.FC = () => {
               <div className="feature-item">
                 <div className="feature-icon">🔒</div>
                 <div className="feature-text">
-                  <h4>Безопасность </h4>
+                  <h4>Безопасность</h4>
                 </div>
               </div>
 
@@ -61,17 +58,16 @@ const FLWToken: React.FC = () => {
             </div>
           </div>
 
-          {/* ПРАВАЯ ЧАСТЬ */}
-          <div className="flw-right">
-            <div className="flw-stats-card">
+          <div className="xlm-right">
+            <div className="xlm-stats-card">
               <div className="stat-row">
                 <span className="stat-label">Общее предложение</span>
-                <span className="stat-value">{tokenStats?.totalSupply ?? '—'} FLW</span>
+                <span className="stat-value">{tokenStats?.totalSupply ?? '—'} XLM</span>
               </div>
 
               <div className="stat-row">
                 <span className="stat-label">В обращении</span>
-                <span className="stat-value">{tokenStats?.circulatingSupply ?? '—'} FLW</span>
+                <span className="stat-value">{tokenStats?.circulatingSupply ?? '—'} XLM</span>
               </div>
 
               <div className="stat-row">
@@ -86,4 +82,4 @@ const FLWToken: React.FC = () => {
   );
 };
 
-export default FLWToken;
+export default XLMToken;

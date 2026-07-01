@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from 'react-router-dom';
 import { SlideContext } from '../../components/SlideContext';
 import WalletModal from '../../components/WalletModal/WalletModal';
 import romashka from '../../assets/growing.avif';
@@ -10,6 +11,7 @@ import bgFlowers3 from '../../assets/money.jpeg';
 import "./Hero.css";
 
 const Hero = () => {
+  const navigate = useNavigate();
   const { setCurrentSlide } = useContext(SlideContext);
   const [currentSlide, setLocalSlide] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
@@ -27,7 +29,7 @@ const Hero = () => {
     },
     {
       id: 2,
-      title: "Собирай цветочные букеты",
+      title: "Поливай и ухаживай за садом",
       image: roza,
       bgImage: bgFlowers2,
       bgClass: "bg-slide-2",
@@ -51,16 +53,19 @@ const Hero = () => {
     setCurrentSlide(index); // ← Передаем в контекст для Header
   };
 
-  // Автоматическая ротация слайдов
   useEffect(() => {
     if (!autoplay) return;
 
     const interval = setInterval(() => {
-      updateSlide((currentSlide + 1) % slides.length);
-    }, 5000); // Смена слайда каждые 5 секунд
+      setLocalSlide((prev) => {
+        const next = (prev + 1) % slides.length;
+        setCurrentSlide(next);
+        return next;
+      });
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, [autoplay, slides.length, currentSlide]);
+  }, [autoplay, slides.length, setCurrentSlide]);
 
   // Функция переключения слайда с обнулением таймера
   const nextSlide = () => {
@@ -89,15 +94,9 @@ const Hero = () => {
     setShowWalletModal(true);
   };
 
-  const handleConnectWallet = (publicKey: string) => {
-    // Сохраняем публичный ключ в localStorage
-    localStorage.setItem('walletPublicKey', publicKey);
-    
-    // Закрываем модальное окно
+  const handleConnectWallet = () => {
     setShowWalletModal(false);
-    
-    // Переходим на страницу игры
-    window.location.href = '/game';
+    navigate('/game');
   };
 
   const currentBg = slides[currentSlide].bgImage;

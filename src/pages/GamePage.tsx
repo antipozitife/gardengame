@@ -1,5 +1,5 @@
-// src/pages/GamePage.tsx
 import React, { useState, useEffect } from 'react';
+import { useWallet } from '../context/WalletContext';
 import ProfileInfo from '../components/ProfileInfo/ProfileInfo';
 import FlowerShop from '../components/FlowerShop/FlowerShop';
 import MyGarden from '../components/MyGarden/MyGarden';
@@ -7,22 +7,14 @@ import WalletModal from '../components/WalletModal/WalletModal';
 import './GamePage.css';
 
 const GamePage: React.FC = () => {
-  const [publicKey, setPublicKey] = useState<string | null>(null);
+  const { publicKey } = useWallet();
   const [showWalletModal, setShowWalletModal] = useState(false);
 
   useEffect(() => {
-    const savedKey = localStorage.getItem('walletPublicKey');
-    if (savedKey) {
-      setPublicKey(savedKey);
-    } else {
+    if (!publicKey) {
       setShowWalletModal(true);
     }
-  }, []);
-
-  const handleConnect = (key: string) => {
-    setPublicKey(key);
-    setShowWalletModal(false);
-  };
+  }, [publicKey]);
 
   return (
     <div className="game-page">
@@ -34,7 +26,7 @@ const GamePage: React.FC = () => {
       <WalletModal
         isOpen={showWalletModal}
         onClose={() => setShowWalletModal(false)}
-        onConnect={handleConnect}
+        onConnect={() => setShowWalletModal(false)}
       />
     </div>
   );
