@@ -1,14 +1,14 @@
-import React, { createContext, useCallback, useContext, useEffect, useState, ReactNode } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from 'react';
 import { connectAlbedo } from '../services/stellar';
-
-const WALLET_STORAGE_KEY = 'walletPublicKey';
-const WALLET_TYPE_KEY = 'walletType';
-
-interface WalletContextValue {
-  publicKey: string | null;
-  connectWallet: () => Promise<string>;
-  disconnectWallet: () => void;
-}
+import { WALLET_STORAGE_KEY, WALLET_TYPE_KEY } from '../constants/storage';
+import type { WalletContextValue } from '../types';
 
 const WalletContext = createContext<WalletContextValue | null>(null);
 
@@ -37,7 +37,14 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   }, []);
 
   return (
-    <WalletContext.Provider value={{ publicKey, connectWallet, disconnectWallet }}>
+    <WalletContext.Provider
+      value={{
+        publicKey,
+        isConnected: Boolean(publicKey),
+        connectWallet,
+        disconnectWallet,
+      }}
+    >
       {children}
     </WalletContext.Provider>
   );

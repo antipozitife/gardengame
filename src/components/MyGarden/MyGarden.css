@@ -1,26 +1,117 @@
-/* src/components/MyGarden/MyGarden.css */
 .my-garden {
   padding: 2rem;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   margin: 2rem 0;
-  min-height: 400px;
+  min-height: 360px;
+}
+
+.garden-title {
+  text-align: center;
+  margin-bottom: 1.25rem;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+}
+
+.balance-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding: 0.9rem 1.25rem;
+  border-radius: 999px;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+}
+
+.balance-display strong {
+  color: var(--accent);
 }
 
 .empty {
   text-align: center;
-  color: white;
-  font-size: 1.3rem;
-  padding: 3rem;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  border: 2px dashed rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
+  padding: 2.5rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  background: var(--surface-strong);
 }
 
-@media (max-width: 768px) {
+.flowers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.flower-card {
+  position: relative;
+  padding: 1rem;
+  border-radius: 18px;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+}
+
+.rarity-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+}
+
+.flower-image {
+  width: 100%;
+  height: 130px;
+  object-fit: contain;
+  margin: 1.4rem auto 0.75rem;
+}
+
+.flower-name {
+  margin: 0.25rem 0 0.75rem;
+}
+
+.flower-income,
+.moisture-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin-bottom: 0.45rem;
+}
+
+.moisture-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(127, 127, 127, 0.2);
+  overflow: hidden;
+  margin-bottom: 0.85rem;
+}
+
+.moisture-fill {
+  height: 100%;
+  border-radius: inherit;
+}
+
+.water-button {
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.water-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
   .my-garden {
-    padding: 1rem;
+    padding: 1.25rem;
   }
 }

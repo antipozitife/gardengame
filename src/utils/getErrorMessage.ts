@@ -41,6 +41,15 @@ export function getErrorMessage(error: unknown, fallback: string): string {
     return 'Недостаточно XLM для выполнения операции';
   }
 
+  if (
+    message.includes('simulation failed') ||
+    message.includes('contract unavailable') ||
+    message.includes('soroban rpc') ||
+    message.includes('host error')
+  ) {
+    return 'Контракт недоступен. Попробуйте позже';
+  }
+
   if (message.includes('albedo')) {
     return 'Не удалось подключить кошелёк Albedo';
   }

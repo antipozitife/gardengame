@@ -1,296 +1,120 @@
-/* src/components/FlowerShop/FlowerShop.css */
 .flower-shop {
   padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   margin: 2rem 0;
 }
 
 .shop-title {
-  font-size: 2.5rem;
-  color: white;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
   text-align: center;
   margin-bottom: 1.5rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  animation: fadeInDown 0.6s ease;
 }
 
 .balance-display {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  padding: 1rem 2rem;
-  border-radius: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.balance-display span {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1rem;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding: 0.9rem 1.25rem;
+  border-radius: 999px;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
 }
 
 .balance-display strong {
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.purchase-message {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  font-weight: 600;
-  font-size: 1.1rem;
-  animation: slideInDown 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.warning-message {
-  background: rgba(255, 152, 0, 0.9);
-  color: white;
-  padding: 1rem;
-  border-radius: 12px;
-  text-align: center;
-  margin-bottom: 1.5rem;
-  font-weight: 600;
-  animation: pulse 2s infinite;
-}
-
-.flowers-grid {
-  display: flex;  /* Вместо grid */
-  gap: 25px;
-  margin-bottom: 40px;
-  overflow-x: auto;  /* Прокрутка если не помещаются */
-  padding-bottom: 10px;
-  justify-content: center; /* Центрируем карточки */
-  flex-wrap: nowrap;
-}
-
-.flower-card {
-  background: white;
-  border-radius: 20px;
-  padding: 1.5rem;
-  position: relative;
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  flex: 1 1 0; /* Одинаковая ширина для всех карточек */
-  min-width: 0; /* Позволяет flex-item сжиматься */
-  max-width: 280px; /* Ограничение максимальной ширины */
-}
-
-.flower-card:hover {
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-}
-
-.flower-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, transparent 0%, rgba(102, 126, 234, 0.05) 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.flower-card:hover::before {
-  opacity: 1;
-}
-
-.rarity-badge {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  color: white;
-  font-weight: 700;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-}
-
-.flower-image-wrapper {
-  width: 190px;
-  height: 190px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0 0 0 25px;
-  overflow: hidden; /* Важно! */
-}
-
-.flower-image {
-  max-width: 190px; /* Точный размер */
-  max-height: 190px; /* Точный размер */
-  width: auto;
-  height: auto;
-  object-fit: scale-down; /* Уменьшает изображение при необходимости */
-  display: block;
-  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
-  animation: floatFlower 3s ease-in-out infinite;
-}
-
-.flower-card:hover .flower-image {
-  transform: scale(1.05);
-}
-
-.flower-name {
-  font-size: 1.5rem;
-  color: #2d3748;
-  margin: 0.5rem 0;
-  font-weight: 700;
-}
-
-.flower-income {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 1rem 0;
-  padding: 0.75rem;
-  background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
-  border-radius: 10px;
-  font-size: 0.95rem;
-  color: #4a5568;
-}
-
-.flower-income span {
-  font-weight: 700;
-  color: #48bb78;
-}
-
-.flower-price {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  margin: 1.5rem 0;
-  gap: 0.5rem;
-}
-
-.price-value {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #667eea;
-}
-
-.price-currency {
+  color: var(--accent);
   font-size: 1.2rem;
-  font-weight: 600;
-  color: #764ba2;
 }
 
-.buy-button {
-  width: 100%;
-  padding: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-}
-
-.buy-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-}
-
-.buy-button:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.buy-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background: #cbd5e0;
-  box-shadow: none;
-}
-
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInDown {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.8;
-  }
+.purchase-progress {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.25rem;
 }
 
 .connect-wallet-section {
   text-align: center;
-  margin: 2rem 0;
+  margin-bottom: 1.5rem;
 }
 
-.connect-wallet-btn {
-  padding: 1.5rem 3rem;
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  color: white;
+.warning-message {
+  margin-top: 0.75rem;
+  color: var(--text-muted);
+}
+
+.flowers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.flower-card {
+  position: relative;
+  padding: 1rem;
+  border-radius: 18px;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.rarity-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+}
+
+.flower-image {
+  width: 100%;
+  height: 140px;
+  object-fit: contain;
+  margin: 1.5rem auto 0.75rem;
+}
+
+.flower-name {
+  margin: 0.35rem 0;
+  font-size: 1.1rem;
+}
+
+.flower-price {
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem;
+  color: var(--text-muted);
+}
+
+.price-value {
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.buy-button {
+  width: 100%;
   border: none;
-  border-radius: 15px;
-  font-size: 1.3rem;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
 }
 
-.connect-wallet-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(79, 172, 254, 0.6);
+.buy-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
+.buy-button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .flower-shop {
-    padding: 1rem;
-  }
-
-  .flowers-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .shop-title {
-    font-size: 2rem;
+    padding: 1.25rem;
   }
 }

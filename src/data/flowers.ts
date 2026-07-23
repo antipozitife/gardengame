@@ -3,16 +3,9 @@ import romashka from '../assets/romashka.png';
 import gvozdika from '../assets/gvozdika.png';
 import roza from '../assets/roza.png';
 import eustoma from '../assets/eustoma.png';
+import type { Flower } from '../types';
 
-export interface Flower {
-  id: number;
-  name: string;
-  image: string;
-  price: number;
-  incomeValue: number;
-  rarity: string;
-  rarityColor: string;
-}
+export type { Flower };
 
 export const FLOWERS: Flower[] = [
   {

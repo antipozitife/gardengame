@@ -6,7 +6,7 @@
 }
 
 .header {
-  background: linear-gradient(135deg, #93A267 0%, #485935 100%);
+  background: linear-gradient(135deg, #93a267 0%, #485935 100%);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
   top: 0;
@@ -16,17 +16,17 @@
 
 /* Слайд 1: Розовый */
 .header.header-slide-1 {
-  background: linear-gradient(135deg, #FFB6D9 0%, #FF8FA3 50%, #FF69B4 100%);
+  background: linear-gradient(135deg, #ffb6d9 0%, #ff8fa3 50%, #ff69b4 100%);
 }
 
 /* Слайд 2: Оранжево-красный */
 .header.header-slide-2 {
-  background: linear-gradient(135deg, #FFB6D9 0%, #FF8FA3 50%, #FF69B4 100%);
+  background: linear-gradient(135deg, #ffb6d9 0%, #ff8fa3 50%, #ff69b4 100%);
 }
 
 /* Слайд 3: Золотой */
 .header.header-slide-3 {
-  background: linear-gradient(135deg, #93A267 0%, #485935 100%);
+  background: linear-gradient(135deg, #93a267 0%, #485935 100%);
 }
 
 .header-container {
@@ -37,6 +37,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.theme-toggle {
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.45rem 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.32);
 }
 
 .nav-link-logo {
@@ -112,24 +133,26 @@
   border-radius: 50%;
   background: linear-gradient(135deg, #718050 0%, #69784b 100%);
   overflow: hidden;
-  border: 5px solid #93A267;
+  border: 5px solid #93a267;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  transition: border-color 0.8s ease, background 0.8s ease;
+  transition:
+    border-color 0.8s ease,
+    background 0.8s ease;
 }
 
 .header.header-slide-1 .coin-face {
-  border-color: #FF69B4;
-  background: linear-gradient(135deg, #FFB6D9 0%, #FF8FA3 100%);
+  border-color: #ff69b4;
+  background: linear-gradient(135deg, #ffb6d9 0%, #ff8fa3 100%);
 }
 
 .header.header-slide-2 .coin-face {
-  border-color: #FF69B4;
-  background: linear-gradient(135deg, #FFB6D9 0%, #FF8FA3 100%);
+  border-color: #ff69b4;
+  background: linear-gradient(135deg, #ffb6d9 0%, #ff8fa3 100%);
 }
 
 .header.header-slide-3 .coin-face {
-  border-color: #93A267;
-  background: linear-gradient(135deg, #93A267 0%, #485935 100%);
+  border-color: #93a267;
+  background: linear-gradient(135deg, #93a267 0%, #485935 100%);
 }
 
 .coin-front {

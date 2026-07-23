@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SlideContext } from '../../components/SlideContext';
+import { useTheme } from '../../context/ThemeContext';
 import logo from '../../assets/logo.png';
 import flower1 from '../../assets/flowers1.jpeg';
 import flower2 from '../../assets/flowers2.jpg';
@@ -11,6 +12,7 @@ import './Header.css';
 
 const Header: React.FC = () => {
   const { currentSlide } = useContext(SlideContext);
+  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const coinRef = useRef<HTMLDivElement>(null);
   const [currentFlowerIndex, setCurrentFlowerIndex] = useState(0);
@@ -81,19 +83,18 @@ const Header: React.FC = () => {
     };
   }, [flowers.length]);
 
-  // Определяем класс в зависимости от слайда Hero
   const getHeaderClass = () => {
     if (!isMainPage) {
-      return 'header-slide-3'; // Всегда зеленый на других страницах
+      return 'header-slide-3';
     }
 
-    switch(currentSlide) {
+    switch (currentSlide) {
       case 0:
-        return 'header-slide-1'; // Розовый
+        return 'header-slide-1';
       case 1:
-        return 'header-slide-2'; // Оранжево-красный
+        return 'header-slide-2';
       case 2:
-        return 'header-slide-3'; // Золотой
+        return 'header-slide-3';
       default:
         return '';
     }
@@ -103,19 +104,29 @@ const Header: React.FC = () => {
     <header className={`header ${getHeaderClass()}`}>
       <div className="header-container">
         <span className="header-text">Flower Garden</span>
-        
-        <Link to="/" className="nav-link-logo">
+
+        <Link to="/" className="nav-link-logo" aria-label="Garden Game home">
           <div className="coin" ref={coinRef}>
             <div className="coin-face coin-front">
-              <img src={logo} alt="Logo" />
+              <img src={logo} alt="Garden Game logo" />
             </div>
             <div className="coin-face coin-back">
-              <img src={flowers[currentFlowerIndex]} alt="Flower" />
+              <img src={flowers[currentFlowerIndex]} alt="" />
             </div>
           </div>
         </Link>
 
-        <span className="header-text">Play with Crypto</span>
+        <div className="header-actions">
+          <span className="header-text">Play with Crypto</span>
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'}
+          >
+            {theme === 'dark' ? 'Light' : 'Dark'}
+          </button>
+        </div>
       </div>
     </header>
   );

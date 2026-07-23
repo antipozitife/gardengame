@@ -1,15 +1,5 @@
-// src/services/gardenDB.ts
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
-
-interface FlowerPurchase {
-  id?: number;
-  flowerId: number;
-  flowerName: string;
-  price: number;
-  publicKey: string;
-  timestamp: number;
-  txHash: string;
-}
+import type { FlowerPurchase } from '../types';
 
 interface FlowerGameDB extends DBSchema {
   flowers: {

@@ -23,9 +23,15 @@ describe('getErrorMessage', () => {
     );
   });
 
+  it('maps unavailable contract errors', () => {
+    expect(getErrorMessage(new Error('Simulation failed'), 'fallback')).toBe(
+      'Контракт недоступен. Попробуйте позже'
+    );
+  });
+
   it('returns original message when no pattern matches', () => {
-    expect(getErrorMessage(new Error('Custom contract error'), 'fallback')).toBe(
-      'Custom contract error'
+    expect(getErrorMessage(new Error('Custom unexpected error'), 'fallback')).toBe(
+      'Custom unexpected error'
     );
   });
 });

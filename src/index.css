@@ -1,15 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap');
+
+:root,
+[data-theme='light'] {
+  --font-sans: 'Manrope', 'Segoe UI', sans-serif;
+  --font-display: 'Fraunces', Georgia, serif;
+  --bg: #f3f7f2;
+  --bg-gradient: radial-gradient(circle at top left, #dff5e4 0%, #f3f7f2 42%, #e8f0ff 100%);
+  --surface: rgba(255, 255, 255, 0.62);
+  --surface-strong: rgba(255, 255, 255, 0.84);
+  --border: rgba(24, 52, 36, 0.12);
+  --text-primary: #183424;
+  --text-muted: #5b6f62;
+  --accent: #1f8a5b;
+  --accent-2: #2f6fed;
+  --danger: #d64545;
+  --shadow: 0 18px 50px rgba(24, 52, 36, 0.12);
+  --radius: 20px;
+  --glass-blur: blur(16px);
+}
+
+[data-theme='dark'] {
+  --bg: #0d1411;
+  --bg-gradient: radial-gradient(circle at top left, #163226 0%, #0d1411 45%, #132033 100%);
+  --surface: rgba(20, 30, 26, 0.72);
+  --surface-strong: rgba(24, 36, 31, 0.9);
+  --border: rgba(210, 230, 220, 0.14);
+  --text-primary: #e8f3ec;
+  --text-muted: #a3b7ac;
+  --accent: #3dd68c;
+  --accent-2: #6ea8ff;
+  --danger: #ff7b7b;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-  }
-  
-  * {
-    box-sizing: border-box;
-  }
-  
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+a {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.glass-card {
+  background: var(--surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(31, 138, 91, 0.28);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.app-toast {
+  font-family: var(--font-sans) !important;
+  border-radius: 14px !important;
+  font-weight: 600 !important;
+}

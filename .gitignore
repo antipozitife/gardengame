@@ -5,10 +5,18 @@ node_modules/
 build/
 dist/
 
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+
 # Environment
 .env
 .env.local
 .env.*.local
+!.env.example
 
 # Testing
 coverage/
@@ -18,22 +26,38 @@ contract/target/
 
 # OS & logs
 .DS_Store
+Thumbs.db
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
+*.sublime-*
 
 # Package manager
 .pnpm-store/
+.yarn/
+.yarn-integrity
 
 # TypeScript
 *.tsbuildinfo
 
 # Cache
 .cache/
+.eslintcache
+.parcel-cache
+.turbo
+
+# Docker
+docker-compose.override.yml
+
+# Misc
+*.pem
+.DS_Store?
+._*

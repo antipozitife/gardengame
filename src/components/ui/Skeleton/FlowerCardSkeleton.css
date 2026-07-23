@@ -1,0 +1,13 @@
+.flower-card-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.flower-card-skeleton__badge {
+  align-self: flex-start;
+}

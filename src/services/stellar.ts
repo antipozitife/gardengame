@@ -1,15 +1,24 @@
 import * as StellarSdk from '@stellar/stellar-sdk';
-import { Contract, SorobanRpc, scValToNative, Address as StellarAddress } from '@stellar/stellar-sdk';
+import {
+  Contract,
+  SorobanRpc,
+  scValToNative,
+  Address as StellarAddress,
+} from '@stellar/stellar-sdk';
 import { gardenDB } from './gardenDB';
 import { getErrorMessage } from '../utils/getErrorMessage';
+import {
+  ALBEDO_SDK_URL,
+  CONTRACT_ADDRESS,
+  HORIZON_URL,
+  NATIVE_TOKEN_ADDRESS,
+  SHOP_ADDRESS,
+  SOROBAN_RPC_URL,
+} from '../constants/stellar';
 
-const server = new StellarSdk.Horizon.Server('https://horizon-testnet.stellar.org');
-const sorobanServer = new SorobanRpc.Server('https://soroban-testnet.stellar.org');
+const server = new StellarSdk.Horizon.Server(HORIZON_URL);
+const sorobanServer = new SorobanRpc.Server(SOROBAN_RPC_URL);
 const networkPassphrase = StellarSdk.Networks.TESTNET;
-
-const CONTRACT_ADDRESS = 'CAQBOJ52ZNZAKGBS7P3RIIL7VUMYRG7NTTOTSYZHEUZEZIXMNNNDNZG4';
-const SHOP_ADDRESS = 'GDGP2QEIYLKNVQO5LSU24Z7Q7GY2JXRG2X4T2KP36VHGAFZDWX3XXYA2';
-const NATIVE_TOKEN_ADDRESS = 'CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC';
 
 declare global {
   interface Window {
@@ -29,7 +38,7 @@ const loadAlbedoSDK = async (): Promise<void> => {
 
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/@albedo-link/intent@0.12.0/lib/albedo.intent.js';
+    script.src = ALBEDO_SDK_URL;
     script.async = true;
 
     script.onload = () => {
@@ -157,10 +166,7 @@ export const waterSingleFlower = async (
   }
 };
 
-export const getLastWatering = async (
-  publicKey: string,
-  flowerId: number
-): Promise<number> => {
+export const getLastWatering = async (publicKey: string, flowerId: number): Promise<number> => {
   try {
     const contract = new Contract(CONTRACT_ADDRESS);
     const account = await server.loadAccount(publicKey);
@@ -196,9 +202,7 @@ export const getLastWatering = async (
 export const getXLMBalance = async (publicKey: string): Promise<number> => {
   try {
     const account = await server.loadAccount(publicKey);
-    const xlmBalance = account.balances.find(
-      (balance) => balance.asset_type === 'native'
-    );
+    const xlmBalance = account.balances.find((balance) => balance.asset_type === 'native');
     return xlmBalance && 'balance' in xlmBalance ? parseFloat(xlmBalance.balance) : 0;
   } catch (error: unknown) {
     throw new Error(getErrorMessage(error, 'Не удалось получить баланс XLM'));

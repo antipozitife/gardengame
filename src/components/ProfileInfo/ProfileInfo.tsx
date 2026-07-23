@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useWallet } from '../../context/WalletContext';
+import { useWallet } from '../../hooks/useWallet';
+import { useToast } from '../../hooks/useToast';
 import { getXLMBalance } from '../../services/stellar';
 import { getErrorMessage } from '../../utils/getErrorMessage';
+import { HORIZON_URL } from '../../constants/stellar';
+import Skeleton from '../ui/Skeleton/Skeleton';
+import ErrorState from '../ui/ErrorState/ErrorState';
 import './ProfileInfo.css';
 
 const ProfileInfo: React.FC = () => {
   const { publicKey, disconnectWallet } = useWallet();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [xlmBalance, setXlmBalance] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [copyMessage, setCopyMessage] = useState('');
 
   useEffect(() => {
     if (publicKey) {
@@ -26,7 +30,7 @@ const ProfileInfo: React.FC = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`https://horizon-testnet.stellar.org/accounts/${key}`);
+      const response = await fetch(`${HORIZON_URL}/accounts/${key}`);
       if (!response.ok) {
         throw new Error('Не удалось загрузить данные аккаунта');
       }
@@ -41,6 +45,7 @@ const ProfileInfo: React.FC = () => {
 
   const handleDisconnect = () => {
     disconnectWallet();
+    showToast('Кошелёк отключён', 'info');
     navigate('/');
   };
 
@@ -48,28 +53,33 @@ const ProfileInfo: React.FC = () => {
     if (!publicKey) return;
     try {
       await navigator.clipboard.writeText(publicKey);
-      setCopyMessage('Адрес скопирован!');
-      setTimeout(() => setCopyMessage(''), 2000);
+      showToast('Адрес скопирован', 'success');
     } catch {
-      setCopyMessage('Не удалось скопировать адрес');
-      setTimeout(() => setCopyMessage(''), 2000);
+      showToast('Не удалось скопировать адрес', 'error');
     }
   };
 
   if (loading) {
     return (
-      <div className="profile-info loading">
-        <p>Загрузка данных аккаунта...</p>
+      <div className="profile-info loading" aria-busy="true" aria-label="Загрузка профиля">
+        <Skeleton width="60%" height={28} />
+        <div style={{ height: 16 }} />
+        <Skeleton width="100%" height={64} borderRadius={12} />
+        <div style={{ height: 16 }} />
+        <Skeleton width="40%" height={24} />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="profile-info error">
-        <div className="error-icon">⚠️</div>
-        <p>{error}</p>
-        <button onClick={() => navigate('/')}>На главную</button>
+      <div className="profile-info">
+        <ErrorState
+          title="Профиль недоступен"
+          message={error}
+          actionLabel="На главную"
+          onAction={() => navigate('/')}
+        />
       </div>
     );
   }
@@ -89,9 +99,8 @@ const ProfileInfo: React.FC = () => {
         <p>Публичный ключ:</p>
         <div className="address-box">
           <code>{publicKey}</code>
-          <button onClick={handleCopy}>📋 Копировать</button>
+          <button onClick={() => void handleCopy()}>📋 Копировать</button>
         </div>
-        {copyMessage && <p className="copy-message">{copyMessage}</p>}
       </div>
 
       <div className="address-section">
