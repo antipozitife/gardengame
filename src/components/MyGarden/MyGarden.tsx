@@ -105,7 +105,14 @@ const MyGarden: React.FC = () => {
                     <span>Влажность</span>
                     <strong>{flower.waterLevel}%</strong>
                   </div>
-                  <div className="moisture-bar">
+                  <div
+                    className="moisture-bar"
+                    role="progressbar"
+                    aria-label={`Влажность цветка ${flower.name}`}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={flower.waterLevel}
+                  >
                     <div
                       className="moisture-fill"
                       style={{
@@ -118,7 +125,12 @@ const MyGarden: React.FC = () => {
                 <button
                   className="water-button"
                   onClick={() => void waterFlower(flower.id, flower.lastWatered)}
-                  disabled={loading || !waterCheck.canWater}
+                  disabled={
+                    loading ||
+                    !waterCheck.canWater ||
+                    (userBalance !== null && userBalance < wateringCost)
+                  }
+                  type="button"
                 >
                   {loading ? (
                     <Spinner size="sm" label="Полив..." />

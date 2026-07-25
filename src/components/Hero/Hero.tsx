@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SlideContext } from '../../components/SlideContext';
 import WalletModal from '../../components/WalletModal/WalletModal';
@@ -8,42 +8,44 @@ import gvozdika from '../../assets/earning.jpg';
 import bgFlowers1 from '../../assets/growingBackground.jpg';
 import bgFlowers2 from '../../assets/buketsBackground.webp';
 import bgFlowers3 from '../../assets/money.jpeg';
-import "./Hero.css";
+import './Hero.css';
 
 const Hero = () => {
   const navigate = useNavigate();
   const { setCurrentSlide } = useContext(SlideContext);
   const [currentSlide, setLocalSlide] = useState(0);
-  const [autoplay, setAutoplay] = useState(true);
+  const [autoplay, setAutoplay] = useState(
+    () => !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  );
   const [showWalletModal, setShowWalletModal] = useState(false);
 
   const slides = [
     {
       id: 1,
-      title: "Выращивай красивые цветы",
+      title: 'Выращивай красивые цветы',
       image: romashka,
       bgImage: bgFlowers1,
-      bgClass: "bg-slide-1",
-      titleColor: "#ffffff",
-      shadowBlur: "rgba(0, 0, 0, 0.6)",
+      bgClass: 'bg-slide-1',
+      titleColor: '#ffffff',
+      shadowBlur: 'rgba(0, 0, 0, 0.6)',
     },
     {
       id: 2,
-      title: "Поливай и ухаживай за садом",
+      title: 'Поливай и ухаживай за садом',
       image: roza,
       bgImage: bgFlowers2,
-      bgClass: "bg-slide-2",
-      titleColor: "#ffffff",
-      shadowBlur: "rgba(0, 0, 0, 0.6)",
+      bgClass: 'bg-slide-2',
+      titleColor: '#ffffff',
+      shadowBlur: 'rgba(0, 0, 0, 0.6)',
     },
     {
       id: 3,
-      title: "Играй с настоящей криптовалютой",
+      title: 'Играй с настоящей криптовалютой',
       image: gvozdika,
       bgImage: bgFlowers3,
-      bgClass: "bg-slide-3",
-      titleColor: "#2d3748",
-      shadowBlur: "rgba(255, 255, 255, 0.9)",
+      bgClass: 'bg-slide-3',
+      titleColor: '#2d3748',
+      shadowBlur: 'rgba(255, 255, 255, 0.9)',
     },
   ];
 
@@ -105,92 +107,113 @@ const Hero = () => {
 
   return (
     <>
-    <section 
-      className={`hero ${slides[currentSlide].bgClass}`}
-      id="hero"
-      style={{
-        backgroundImage: `url(${currentBg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        '--slide-title-color': currentTitleColor,
-        '--slide-shadow-color': currentShadowColor,
-      } as React.CSSProperties}
-    >
-      {/* Полупрозрачный оверлей для читаемости */}
-      <div className="hero-overlay"></div>
+      <section
+        className={`hero ${slides[currentSlide].bgClass}`}
+        id="hero"
+        aria-roledescription="carousel"
+        aria-label="Презентация Garden Game"
+        style={
+          {
+            backgroundImage: `url(${currentBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed',
+            '--slide-title-color': currentTitleColor,
+            '--slide-shadow-color': currentShadowColor,
+          } as React.CSSProperties
+        }
+      >
+        <div className="hero-overlay" aria-hidden="true"></div>
 
-      {/* Декоративный фоновый паттерн */}
-      <div className="hero-background">
-        <div className="flower-pattern flower-pattern-1"></div>
-        <div className="flower-pattern flower-pattern-2"></div>
-        <div className="flower-pattern flower-pattern-3"></div>
-      </div>
+        <div className="hero-background" aria-hidden="true">
+          <div className="flower-pattern flower-pattern-1"></div>
+          <div className="flower-pattern flower-pattern-2"></div>
+          <div className="flower-pattern flower-pattern-3"></div>
+        </div>
 
-      {/* Основной слайдер */}
-      <div className="hero-slider">
-        <div className="slider-container">
-          {slides.map((slide, index) => (
-            <div
-              key={slide.id}
-              className={`slide ${index === currentSlide ? 'active' : ''}`}
-              style={{
-                transform: `translateX(${(index - currentSlide) * 100}%)`,
-              }}
-            >
-              <div className="slide-content">
-                <div className="slide-text-wrapper">
-                  <h1 className="slide-title">{slide.title}</h1>
-                </div>
-                <div className="slide-image-wrapper">
-                  <img src={slide.image} alt={slide.title} className="slide-image" />
+        <div className="hero-slider">
+          <div className="slider-container" aria-live="polite">
+            {slides.map((slide, index) => (
+              <div
+                key={slide.id}
+                className={`slide ${index === currentSlide ? 'active' : ''}`}
+                style={{
+                  transform: `translateX(${(index - currentSlide) * 100}%)`,
+                }}
+                aria-hidden={index !== currentSlide}
+              >
+                <div className="slide-content">
+                  <div className="slide-text-wrapper">
+                    <h1 className="slide-title">{slide.title}</h1>
+                  </div>
+                  <div className="slide-image-wrapper">
+                    <img
+                      src={slide.image}
+                      alt={slide.title}
+                      className="slide-image"
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                      decoding="async"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        {/* Кнопки навигации */}
-        <button 
-          className="slider-btn slider-btn-prev" 
-          onClick={prevSlide}
-          aria-label="Предыдущий слайд"
-        >
-          ‹
-        </button>
-        <button 
-          className="slider-btn slider-btn-next" 
-          onClick={nextSlide}
-          aria-label="Следующий слайд"
-        >
-          ›
-        </button>
+          <button
+            className="slider-btn slider-btn-prev"
+            onClick={prevSlide}
+            aria-label="Предыдущий слайд"
+            type="button"
+          >
+            ‹
+          </button>
+          <button
+            className="slider-btn slider-btn-next"
+            onClick={nextSlide}
+            aria-label="Следующий слайд"
+            type="button"
+          >
+            ›
+          </button>
 
-        {/* Точки навигации */}
-        <div className="slider-dots">
-          {slides.map((_, index) => (
+          <div className="slider-dots" role="tablist" aria-label="Слайды">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                role="tab"
+                aria-selected={index === currentSlide}
+                className={`dot ${index === currentSlide ? 'active' : ''}`}
+                onClick={() => goToSlide(index)}
+                aria-label={`Перейти на слайд ${index + 1}`}
+              ></button>
+            ))}
             <button
-              key={index}
-              className={`dot ${index === currentSlide ? 'active' : ''}`}
-              onClick={() => goToSlide(index)}
-              aria-label={`Перейти на слайд ${index + 1}`}
-            ></button>
-          ))}
+              type="button"
+              className="autoplay-toggle"
+              onClick={() => setAutoplay((current) => !current)}
+              aria-label={
+                autoplay
+                  ? 'Остановить автоматическую прокрутку'
+                  : 'Запустить автоматическую прокрутку'
+              }
+            >
+              {autoplay ? 'Ⅱ' : '▶'}
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* Кнопки действия */}
-      <div className="hero-actions">
-        <button className="btn-primary" onClick={handlePlayClick}>
-          Начать играть
-        </button>
-        <button className="btn-secondary" onClick={scrollToHowToPlay}>
-          Узнать больше
-        </button>
-      </div>
-    </section>
+        <div className="hero-actions">
+          <button type="button" className="btn-primary" onClick={handlePlayClick}>
+            Начать играть
+          </button>
+          <button type="button" className="btn-secondary" onClick={scrollToHowToPlay}>
+            Узнать больше
+          </button>
+        </div>
+      </section>
 
-    {/* Модальное окно для подключения кошелька */}
       <WalletModal
         isOpen={showWalletModal}
         onClose={() => setShowWalletModal(false)}

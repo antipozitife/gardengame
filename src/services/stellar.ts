@@ -5,10 +5,10 @@ import {
   scValToNative,
   Address as StellarAddress,
 } from '@stellar/stellar-sdk';
+import albedo from '@albedo-link/intent';
 import { gardenDB } from './gardenDB';
 import { getErrorMessage } from '../utils/getErrorMessage';
 import {
-  ALBEDO_SDK_URL,
   CONTRACT_ADDRESS,
   HORIZON_URL,
   NATIVE_TOKEN_ADDRESS,
@@ -18,70 +18,52 @@ import {
 
 const server = new StellarSdk.Horizon.Server(HORIZON_URL);
 const sorobanServer = new SorobanRpc.Server(SOROBAN_RPC_URL);
-const networkPassphrase = StellarSdk.Networks.TESTNET;
-
-declare global {
-  interface Window {
-    albedo?: {
-      publicKey(params?: Record<string, unknown>): Promise<{ pubkey: string }>;
-      tx(params: { xdr: string; network?: string; submit?: boolean }): Promise<{
-        signed_envelope_xdr: string;
-        tx_hash: string;
-        network: string;
-      }>;
-    };
-  }
-}
-
-const loadAlbedoSDK = async (): Promise<void> => {
-  if (window.albedo) return;
-
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = ALBEDO_SDK_URL;
-    script.async = true;
-
-    script.onload = () => {
-      setTimeout(() => {
-        if (window.albedo) {
-          resolve();
-        } else {
-          reject(new Error('Albedo SDK не загрузился'));
-        }
-      }, 500);
-    };
-
-    script.onerror = () => reject(new Error('Ошибка загрузки Albedo SDK'));
-    document.head.appendChild(script);
-  });
-};
+const network = process.env.REACT_APP_STELLAR_NETWORK === 'public' ? 'public' : 'testnet';
+const networkPassphrase =
+  network === 'public' ? StellarSdk.Networks.PUBLIC : StellarSdk.Networks.TESTNET;
+const TRANSACTION_POLL_INTERVAL_MS = 1_500;
+const TRANSACTION_POLL_ATTEMPTS = 20;
 
 export const connectAlbedo = async (): Promise<string> => {
-  await loadAlbedoSDK();
-
-  if (!window.albedo) {
-    throw new Error('Albedo SDK недоступен');
-  }
-
-  const result = await window.albedo.publicKey({});
+  const result = await albedo.publicKey({});
   return result.pubkey;
 };
 
 async function signTransaction(xdr: string): Promise<string> {
-  await loadAlbedoSDK();
-
-  if (!window.albedo) {
-    throw new Error('Albedo не найден');
-  }
-
-  const result = await window.albedo.tx({
+  const result = await albedo.tx({
     xdr,
-    network: 'testnet',
+    network,
     submit: false,
   });
 
   return result.signed_envelope_xdr;
 }
+
+const waitForTransaction = async (hash: string): Promise<void> => {
+  for (let attempt = 0; attempt < TRANSACTION_POLL_ATTEMPTS; attempt += 1) {
+    const result = await sorobanServer.getTransaction(hash);
+
+    if (result.status === SorobanRpc.Api.GetTransactionStatus.SUCCESS) return;
+    if (result.status === SorobanRpc.Api.GetTransactionStatus.FAILED) {
+      throw new Error('Транзакция отклонена сетью Stellar');
+    }
+
+    await new Promise((resolve) => window.setTimeout(resolve, TRANSACTION_POLL_INTERVAL_MS));
+  }
+
+  throw new Error('Сеть Stellar не подтвердила транзакцию вовремя');
+};
+
+const submitTransaction = async (transaction: StellarSdk.Transaction): Promise<string> => {
+  const response = await sorobanServer.sendTransaction(transaction);
+
+  if (response.status !== 'PENDING' && response.status !== 'DUPLICATE') {
+    throw new Error('Сеть Stellar не приняла транзакцию');
+  }
+
+  await waitForTransaction(response.hash);
+  return response.hash;
+};
 
 export const buyFlower = async (
   publicKey: string,
@@ -116,11 +98,10 @@ export const buyFlower = async (
     const signedXDR = await signTransaction(preparedTx.toXDR());
 
     const signedTx = StellarSdk.TransactionBuilder.fromXDR(signedXDR, networkPassphrase);
-    const response = await sorobanServer.sendTransaction(signedTx as StellarSdk.Transaction);
+    const txHash = await submitTransaction(signedTx as StellarSdk.Transaction);
+    await gardenDB.addFlower(flowerId, flowerName, publicKey, price, txHash);
 
-    await gardenDB.addFlower(flowerId, flowerName, publicKey, price, response.hash);
-
-    return response.hash;
+    return txHash;
   } catch (error: unknown) {
     throw new Error(getErrorMessage(error, 'Не удалось купить цветок'));
   }
@@ -158,9 +139,7 @@ export const waterSingleFlower = async (
     const signedXDR = await signTransaction(preparedTx.toXDR());
 
     const signedTx = StellarSdk.TransactionBuilder.fromXDR(signedXDR, networkPassphrase);
-    const response = await sorobanServer.sendTransaction(signedTx as StellarSdk.Transaction);
-
-    return response.hash;
+    return submitTransaction(signedTx as StellarSdk.Transaction);
   } catch (error: unknown) {
     throw new Error(getErrorMessage(error, 'Не удалось полить цветок'));
   }

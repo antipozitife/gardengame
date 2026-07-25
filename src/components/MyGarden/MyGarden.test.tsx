@@ -12,7 +12,7 @@ jest.mock('../../services/stellar', () => ({
 
 jest.mock('../../services/gardenDB', () => ({
   gardenDB: {
-    getAllFlowers: jest.fn().mockResolvedValue([]),
+    getFlowersByUser: jest.fn().mockResolvedValue([]),
   },
 }));
 
@@ -24,14 +24,14 @@ describe('MyGarden', () => {
       getLastWatering: jest.Mock;
     };
     const { gardenDB } = jest.requireMock('../../services/gardenDB') as {
-      gardenDB: { getAllFlowers: jest.Mock };
+      gardenDB: { getFlowersByUser: jest.Mock };
     };
 
     stellar.getXLMBalance.mockReset();
     stellar.getXLMBalance.mockResolvedValue(50);
     stellar.getLastWatering.mockResolvedValue(0);
-    gardenDB.getAllFlowers.mockReset();
-    gardenDB.getAllFlowers.mockResolvedValue([]);
+    gardenDB.getFlowersByUser.mockReset();
+    gardenDB.getFlowersByUser.mockResolvedValue([]);
   });
 
   it('shows message when wallet is not connected', () => {
@@ -53,10 +53,10 @@ describe('MyGarden', () => {
     localStorage.setItem(WALLET_STORAGE_KEY, 'G_TEST_KEY');
 
     const { gardenDB } = jest.requireMock('../../services/gardenDB') as {
-      gardenDB: { getAllFlowers: jest.Mock };
+      gardenDB: { getFlowersByUser: jest.Mock };
     };
 
-    gardenDB.getAllFlowers.mockResolvedValueOnce([
+    gardenDB.getFlowersByUser.mockResolvedValueOnce([
       {
         flowerId: 1,
         flowerName: 'Астра',

@@ -23,6 +23,7 @@
 - `Spinner`
 - `ErrorState`
 - Modal (`WalletModal`) with portal rendering
+- Carousel pause control + `prefers-reduced-motion`
 
 ## Error UX
 
@@ -41,3 +42,10 @@ Coverage focus:
 - garden empty/owned states
 - error message mapping
 - theme toggle
+
+## Quality gates
+
+- ESLint
+- TypeScript (`tsc --noEmit`)
+- Jest + React Testing Library
+- Production Webpack build through `react-scripts`

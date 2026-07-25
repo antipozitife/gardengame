@@ -21,19 +21,28 @@ const GamePage: React.FC = () => {
 
   return (
     <div className="game-page">
-      <div className="game-toolbar">
+      <a className="skip-link" href="#game-content">
+        Перейти к игре
+      </a>
+      <header className="game-toolbar" aria-label="Панель игры">
         <Link className="btn btn-ghost" to="/">
           На главную
         </Link>
-        <button type="button" className="btn btn-ghost" onClick={toggleTheme}>
+        <button
+          type="button"
+          className="btn btn-ghost"
+          onClick={toggleTheme}
+          aria-pressed={theme === 'dark'}
+          aria-label={theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'}
+        >
           {theme === 'dark' ? 'Light mode' : 'Dark mode'}
         </button>
-      </div>
-      <div className="game-content">
+      </header>
+      <main id="game-content" className="game-content">
         <ProfileInfo />
         <FlowerShop />
         <MyGarden />
-      </div>
+      </main>
       <WalletModal
         isOpen={showWalletModal}
         onClose={() => setShowWalletModal(false)}

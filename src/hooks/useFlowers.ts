@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { FLOWERS } from '../data/flowers';
 import { buyFlower, getXLMBalance } from '../services/stellar';
 import { gardenDB } from '../services/gardenDB';
 import { getErrorMessage } from '../utils/getErrorMessage';
 import { PURCHASE_STEP_LABELS, PurchaseStep } from '../constants/purchase';
+import { GARDEN_UPDATED_EVENT } from '../constants/events';
 import { useWallet } from './useWallet';
 import { useToast } from './useToast';
 import type { Flower } from '../types';
@@ -27,6 +28,7 @@ export const useFlowers = (): UseFlowersResult => {
   const [balanceError, setBalanceError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [purchaseStep, setPurchaseStep] = useState<PurchaseStep>('idle');
+  const resetStepTimer = useRef<number>();
 
   const refreshBalance = useCallback(async () => {
     if (!publicKey) {
@@ -52,6 +54,15 @@ export const useFlowers = (): UseFlowersResult => {
   useEffect(() => {
     void refreshBalance();
   }, [refreshBalance]);
+
+  useEffect(
+    () => () => {
+      if (resetStepTimer.current) {
+        window.clearTimeout(resetStepTimer.current);
+      }
+    },
+    []
+  );
 
   const buy = useCallback(
     async (flower: Flower) => {
@@ -81,15 +92,13 @@ export const useFlowers = (): UseFlowersResult => {
         setPurchaseStep('done');
         showToast(`Готово! ${flower.name} куплен. TX: ${txHash.substring(0, 8)}...`, 'success');
         await refreshBalance();
-        window.setTimeout(() => {
-          window.location.reload();
-        }, 1500);
+        window.dispatchEvent(new Event(GARDEN_UPDATED_EVENT));
       } catch (error: unknown) {
         setPurchaseStep('idle');
         showToast(getErrorMessage(error, 'Не удалось купить цветок'), 'error');
       } finally {
         setIsLoading(false);
-        window.setTimeout(() => setPurchaseStep('idle'), 2000);
+        resetStepTimer.current = window.setTimeout(() => setPurchaseStep('idle'), 2000);
       }
     },
     [publicKey, userBalance, showToast, refreshBalance]

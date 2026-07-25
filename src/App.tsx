@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { WalletProvider } from './context/WalletContext';
 import { ThemeProvider } from './context/ThemeContext';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-import Landing from './pages/MainPage';
-import GamePage from './pages/GamePage';
-import NotFoundPage from './pages/NotFoundPage';
-import ServerErrorPage from './pages/ServerErrorPage';
-import WalletErrorPage from './pages/WalletErrorPage';
-import NetworkErrorPage from './pages/NetworkErrorPage';
+import PageLoader from './components/ui/PageLoader/PageLoader';
 import './App.css';
+
+const Landing = lazy(() => import('./pages/MainPage'));
+const GamePage = lazy(() => import('./pages/GamePage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const ServerErrorPage = lazy(() => import('./pages/ServerErrorPage'));
+const WalletErrorPage = lazy(() => import('./pages/WalletErrorPage'));
+const NetworkErrorPage = lazy(() => import('./pages/NetworkErrorPage'));
 
 const App: React.FC = () => {
   return (
@@ -25,14 +27,16 @@ const App: React.FC = () => {
                 duration: 4000,
               }}
             />
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/game" element={<GamePage />} />
-              <Route path="/error/500" element={<ServerErrorPage />} />
-              <Route path="/error/wallet" element={<WalletErrorPage />} />
-              <Route path="/error/network" element={<NetworkErrorPage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route path="/game" element={<GamePage />} />
+                <Route path="/error/500" element={<ServerErrorPage />} />
+                <Route path="/error/wallet" element={<WalletErrorPage />} />
+                <Route path="/error/network" element={<NetworkErrorPage />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </Suspense>
           </ErrorBoundary>
         </Router>
       </WalletProvider>

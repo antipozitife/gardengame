@@ -1,192 +1,196 @@
-# Garden Game
+<div align="center">
+  <img src="src/assets/logo.png" alt="Garden Game logo" width="104" />
 
-<p align="center">
-  <img src="src/assets/logo.png" alt="Garden Game" width="120" />
-</p>
+  # Garden Game
 
-<p align="center">
-  <strong>Web3 flower garden on Stellar Soroban</strong><br/>
-  Grow flowers, sign with Albedo, settle on-chain.
-</p>
+  **A Web3 flower garden powered by React, TypeScript and Stellar Soroban**
 
-<p align="center">
-  <a href="https://garden-game.vercel.app"><img src="https://img.shields.io/badge/demo-live-1f8a5b?style=for-the-badge" alt="Live demo" /></a>
-  <a href="https://github.com/antipozitife/gardengame/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/antipozitife/gardengame/ci.yml?branch=main&style=for-the-badge&label=CI" alt="CI" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2f6fed?style=for-the-badge" alt="MIT" /></a>
-  <img src="https://img.shields.io/badge/react-18-61dafb?style=for-the-badge&logo=react&logoColor=white" alt="React" />
-  <img src="https://img.shields.io/badge/typescript-4.9-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/stellar-soroban-000000?style=for-the-badge" alt="Stellar" />
-</p>
+  Grow flowers · Sign with Albedo · Settle on-chain
 
-<p align="center">
-  <a href="https://garden-game.vercel.app"><b>https://garden-game.vercel.app</b></a>
-</p>
+  <p>
+    <a href="https://garden-game.vercel.app"><strong>Live demo</strong></a>
+    ·
+    <a href="docs/architecture.md">Architecture</a>
+    ·
+    <a href="docs/deployment.md">Deployment</a>
+    ·
+    <a href="CONTRIBUTING.md">Contributing</a>
+  </p>
 
-<p align="center">
-  <img src="docs/screenshots/banner.jpg" alt="Garden Game banner" width="900" />
-</p>
+  <p>
+    <a href="https://garden-game.vercel.app">
+      <img alt="Live demo" src="https://img.shields.io/badge/demo-online-1f8a5b?style=flat-square" />
+    </a>
+    <a href="https://github.com/antipozitife/gardengame/actions/workflows/ci.yml">
+      <img alt="CI status" src="https://img.shields.io/github/actions/workflow/status/antipozitife/gardengame/ci.yml?branch=main&style=flat-square&label=CI" />
+    </a>
+    <img alt="React 18" src="https://img.shields.io/badge/React-18-61dafb?style=flat-square&logo=react&logoColor=white" />
+    <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white" />
+    <img alt="Webpack" src="https://img.shields.io/badge/Webpack-5-8dd6f9?style=flat-square&logo=webpack&logoColor=white" />
+    <img alt="Stellar testnet" src="https://img.shields.io/badge/Stellar-testnet-111?style=flat-square&logo=stellar&logoColor=white" />
+    <img alt="License MIT" src="https://img.shields.io/badge/license-MIT-2f6fed?style=flat-square" />
+  </p>
+</div>
 
----
+<a href="https://garden-game.vercel.app">
+  <img src="docs/screenshots/readme-hero.png" alt="Garden Game — futuristic Web3 greenhouse" width="100%" />
+</a>
 
-## Features
+> [!NOTE]
+> Garden Game works on **Stellar testnet**. No real funds are required for the demo.
 
-- Buy flowers with XLM via Soroban contract
-- Water plants with cooldown + moisture UI
-- Albedo wallet connect / sign flow
-- IndexedDB garden persistence
-- Dark mode
-- Toast notifications (`react-hot-toast`)
-- Skeleton + spinner async states
-- Error Boundary + 404 / wallet / network pages
-- Purchase UX steps: buying → wallet confirm → network → done
+## Preview
 
----
+<div align="center">
+  <a href="https://garden-game.vercel.app">
+    <img src="docs/screenshots/demo.gif" alt="Animated Garden Game preview" width="900" />
+  </a>
+  <br />
+  <sub>From seed to an on-chain garden — explore, buy, water and grow.</sub>
+</div>
 
-## Tech stack
+## Why this project
 
-| Layer | Choices |
+Garden Game is more than a landing page. It demonstrates a complete frontend workflow around
+asynchronous blockchain operations: wallet authorization, transaction signing, network
+confirmation, local persistence and resilient UI states.
+
+| Product experience | Engineering |
 | --- | --- |
-| UI | React 18, TypeScript, Framer Motion, CSS variables / glassmorphism |
-| Bundler | Webpack via Create React App (`react-scripts`) |
-| State | Context API (`Wallet`, `Theme`) + custom hooks |
-| Web3 | Stellar SDK, Soroban RPC, Albedo |
-| Storage | IndexedDB (`idb`) |
-| Quality | ESLint, Prettier, Jest, React Testing Library, Husky, lint-staged |
-| CI/CD | GitHub Actions, Vercel |
-| Ops | Docker + nginx |
+| Flower shop and personal garden | React 18 + strict TypeScript |
+| Albedo wallet connection | Stellar SDK + Soroban RPC |
+| Purchase and watering flows | IndexedDB persistence with `idb` |
+| Balance, cooldown and moisture states | Context + reusable domain hooks |
+| Light/dark themes and motion | Route-level code splitting |
+| Responsive and keyboard-friendly UI | Jest, RTL, ESLint, Prettier and CI |
 
-> Tests stay on **Jest + RTL** (CRA-native). The app is intentionally Webpack-based (not Vite).
+## Highlights
 
----
+- **Confirmed transactions** — purchases are persisted only after Stellar reports success.
+- **Clear async UX** — signing, confirmation, network wait, success and error states are visible.
+- **Resilient data layer** — the garden is indexed by wallet and remains available in IndexedDB.
+- **Accessible interactions** — skip links, focus trap, focus restoration, ARIA progress values,
+  carousel controls and reduced-motion support.
+- **Fast navigation** — pages are split with `React.lazy` and loaded through `Suspense`.
+- **Production workflow** — lint, strict typecheck, 34 tests and Webpack build run in CI.
+
+## How it works
+
+```mermaid
+sequenceDiagram
+    actor Player
+    participant UI as React UI
+    participant Wallet as Albedo
+    participant RPC as Soroban RPC
+    participant DB as IndexedDB
+
+    Player->>UI: Select a flower
+    UI->>Wallet: Request transaction signature
+    Wallet-->>UI: Return signed XDR
+    UI->>RPC: Submit transaction
+    loop Until final status
+        UI->>RPC: Check transaction
+        RPC-->>UI: Pending / success / failed
+    end
+    UI->>DB: Persist confirmed purchase
+    UI-->>Player: Refresh garden and balance
+```
 
 ## Architecture
 
 ```text
 src/
-├── components/        # Feature UI + ui/ primitives
-├── pages/             # Routes (Main, Game, error pages)
-├── hooks/             # useWallet, useFlowers, useGarden, useToast, useTheme
-├── context/           # WalletProvider, ThemeProvider
-├── services/          # stellar, gardenDB, priceService
-├── constants/         # contract addresses, purchase steps, garden rules
-├── types/             # shared TS types
-├── utils/             # pure helpers
-├── data/              # flower catalog
-└── assets/            # images
+├── components/        feature components and reusable UI
+├── context/           wallet and theme providers
+├── hooks/             purchase, garden, wallet and toast logic
+├── services/          Stellar/Soroban and IndexedDB adapters
+├── pages/             lazy-loaded route screens
+├── data/              flower catalog
+├── constants/         domain and environment configuration
+├── types/             shared TypeScript contracts
+└── utils/             pure, tested garden/error logic
 ```
 
-Docs:
+The UI does not call browser storage or RPC endpoints directly. Components consume focused hooks;
+hooks coordinate domain state; services isolate infrastructure. More detail is available in
+[the architecture document](docs/architecture.md) and
+[the decision log](docs/decisions.md).
 
-- [Architecture](docs/architecture.md)
-- [Smart contract](docs/smart-contract.md)
-- [Frontend](docs/frontend.md)
-- [Deployment](docs/deployment.md)
+## Tech stack
 
----
+| Area | Tools |
+| --- | --- |
+| Interface | React 18, React Router, Framer Motion, CSS |
+| Language | TypeScript in strict mode |
+| Bundler | Webpack 5 through Create React App |
+| Web3 | Stellar SDK, Soroban RPC, Albedo |
+| Persistence | IndexedDB with `idb` |
+| Feedback | React Hot Toast, skeletons, spinners and error states |
+| Quality | Jest, React Testing Library, ESLint, Prettier, Husky |
+| Delivery | GitHub Actions, Vercel, Docker and nginx |
 
 ## Quick start
+
+Requirements: Node.js 20+ and npm.
 
 ```bash
 git clone https://github.com/antipozitife/gardengame.git
 cd gardengame
-npm install
+cp .env.example .env
+npm ci
 npm start
 ```
 
-Open http://localhost:3000
+Open [http://localhost:3000](http://localhost:3000).
+
+The checked-in environment defaults point to Stellar testnet. Public endpoints and contract
+addresses can be overridden through `.env`; never place secrets in `REACT_APP_*` variables because
+Webpack embeds them in the browser bundle.
+
+## Quality gates
 
 ```bash
 npm run lint
+npm run typecheck
 npm run test:ci
 npm run build
-docker compose up --build   # http://localhost:8080
 ```
 
----
+Current test suite: **11 suites · 34 tests**.
 
-## What was hardest
+Every pull request runs the same checks in
+[GitHub Actions](.github/workflows/ci.yml). A pre-push hook catches failures locally.
 
-The hardest part was **Albedo + Soroban integration**:
+## Docker
 
-- preparing/simulating transactions
-- wallet signing and user rejection paths
-- mapping network / contract failures into friendly UX
-- syncing on-chain purchases with local IndexedDB garden state
+```bash
+docker compose up --build
+```
 
----
+The app is available at [http://localhost:8080](http://localhost:8080). The production image uses a
+multi-stage Node build and serves the static Webpack bundle through nginx with SPA fallback.
 
-## Technical decisions
+## Documentation
 
-- **Hooks over fat components** — purchase/garden rules live in `useFlowers` / `useGarden`
-- **Constants for chain addresses** — easy environment swaps later
-- **Error mapping utility** — one place for wallet/network/contract messages
-- **Glass design tokens** — light/dark themes via `data-theme`
-- **CRA/Webpack kept** — stable portfolio baseline without Vite migration risk
-
----
-
-## What I learned
-
-- End-to-end Web3 UX (connect → sign → confirm → recover from failure)
-- Separating blockchain I/O from React rendering
-- Designing async feedback users can trust
-- Building a portfolio repo with CI, docs, Docker, and contribution files
-
----
+- [Architecture](docs/architecture.md)
+- [Frontend notes](docs/frontend.md)
+- [Smart contract](docs/smart-contract.md)
+- [Deployment](docs/deployment.md)
+- [Architecture decisions](docs/decisions.md)
+- [Contributing guide](CONTRIBUTING.md)
+- [Changelog](CHANGELOG.md)
 
 ## Roadmap
 
-- [ ] Achievements / daily rewards
-- [ ] Leaderboard
-- [ ] Richer plant animations & SFX
-- [ ] More contract reads (on-chain balances as source of truth)
-- [ ] E2E tests (Playwright)
-
----
-
-## Lighthouse targets
-
-Optimized for portfolio demos:
-
-| Category | Target |
-| --- | --- |
-| Performance | 95+ |
-| Accessibility | 100 |
-| Best Practices | 100 |
-| SEO | 100 |
-
-Applied: semantic landmarks, focus states, lazy images, meta/OG tags, deferred Albedo script, compressed static assets via production build / nginx gzip.
-
----
-
-## FAQ
-
-**Do I need real money?**  
-No — Stellar **testnet** + Friendbot.
-
-**Which wallet?**  
-Albedo.
-
-**Why is `node_modules` / `build` not in git?**  
-Install with `npm install`, build with `npm run build`.
-
-**Where is the contract?**  
-`contract/src/lib.rs` + notes in `docs/smart-contract.md`.
-
----
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
-
-Pre-commit (Husky): ESLint + Prettier via lint-staged.
-
----
-
-## Release
-
-Current release: **v1.0.0** — see [CHANGELOG.md](CHANGELOG.md).
+- [ ] Playwright end-to-end coverage
+- [ ] Achievements and daily rewards
+- [ ] On-chain balance as the primary garden source
+- [ ] Transaction history with Stellar Explorer links
 
 ## License
 
-[MIT](LICENSE)
+Released under the [MIT License](LICENSE).
+
+<div align="center">
+  <strong>Built with React, TypeScript, Webpack and Stellar.</strong>
+</div>

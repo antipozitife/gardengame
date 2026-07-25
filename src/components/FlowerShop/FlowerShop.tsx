@@ -25,8 +25,11 @@ const FlowerShop: React.FC = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
+      aria-labelledby="shop-title"
     >
-      <h2 className="shop-title">Магазин цветов</h2>
+      <h2 id="shop-title" className="shop-title">
+        Магазин цветов
+      </h2>
 
       {isConnected && typeof userBalance === 'number' && (
         <div className="balance-display">
@@ -83,6 +86,8 @@ const FlowerShop: React.FC = () => {
               disabled={
                 isLoading || !isConnected || (userBalance !== null && userBalance < flower.price)
               }
+              type="button"
+              aria-label={`Купить ${flower.name} за ${flower.price} XLM`}
             >
               {isLoading ? <Spinner size="sm" label="Покупка..." /> : 'Купить'}
             </button>

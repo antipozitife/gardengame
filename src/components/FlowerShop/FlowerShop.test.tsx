@@ -42,7 +42,7 @@ describe('FlowerShop', () => {
   it('disables buy buttons when wallet is not connected', () => {
     renderWithProviders(<FlowerShop />);
 
-    const buyButtons = screen.getAllByRole('button', { name: 'Купить' });
+    const buyButtons = screen.getAllByRole('button', { name: /Купить .+ за .+ XLM/i });
     buyButtons.forEach((button) => {
       expect(button).toBeDisabled();
     });
@@ -64,7 +64,7 @@ describe('FlowerShop', () => {
 
     expect(await screen.findByText(/Ваш баланс/i)).toBeInTheDocument();
 
-    const buyButtons = screen.getAllByRole('button', { name: 'Купить' });
+    const buyButtons = screen.getAllByRole('button', { name: /Купить .+ за .+ XLM/i });
     await userEvent.click(buyButtons[0]);
 
     await waitFor(() => {

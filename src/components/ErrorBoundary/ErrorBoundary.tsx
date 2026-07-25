@@ -20,7 +20,10 @@ class ErrorBoundary extends Component<Props, State> {
   static getDerivedStateFromError(error: Error): State {
     return {
       hasError: true,
-      message: error.message || 'Unexpected application error',
+      message:
+        process.env.NODE_ENV === 'development'
+          ? error.message || 'Unexpected application error'
+          : 'Не удалось отобразить страницу. Попробуйте ещё раз.',
     };
   }
 

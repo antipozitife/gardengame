@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { SlideProvider } from '../components/SlideContext';
 import Header from '../components/Header/Header';
 import Hero from '../components/Hero/Hero';
@@ -10,14 +10,19 @@ import Footer from '../components/Footer/Footer';
 const MainPage: React.FC = () => {
   return (
     <SlideProvider>
+      <a className="skip-link" href="#main-content">
+        Перейти к содержимому
+      </a>
       <Header />
-      <Hero />
-      <HowToPlay />
-      <FlowerTypes />
-      <XLMToken />
+      <main id="main-content">
+        <Hero />
+        <HowToPlay />
+        <FlowerTypes />
+        <XLMToken />
+      </main>
       <Footer />
     </SlideProvider>
   );
 };
 
-export default MainPage;
+export default memo(MainPage);

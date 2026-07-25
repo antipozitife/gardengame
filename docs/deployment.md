@@ -18,8 +18,9 @@ On every PR / push to `main`:
 
 1. `npm ci`
 2. `npm run lint`
-3. `npm run test:ci`
-4. `npm run build`
+3. `npm run typecheck`
+4. `npm run test:ci`
+5. `npm run build`
 
 ## Docker
 
@@ -40,4 +41,12 @@ Copy `.env.example` → `.env` if you need local overrides.
 
 ```bash
 REACT_APP_STELLAR_NETWORK=testnet
+REACT_APP_HORIZON_URL=https://horizon-testnet.stellar.org
+REACT_APP_SOROBAN_RPC_URL=https://soroban-testnet.stellar.org
+REACT_APP_CONTRACT_ADDRESS=...
+REACT_APP_SHOP_ADDRESS=...
+REACT_APP_NATIVE_TOKEN_ADDRESS=...
 ```
+
+Все публичные значения имеют testnet-значения по умолчанию. Секретные ключи никогда не должны
+храниться в переменных `REACT_APP_*`: CRA встраивает их в клиентский bundle.

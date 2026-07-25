@@ -3,11 +3,9 @@ import { waterSingleFlower, getLastWatering, getXLMBalance } from '../services/s
 import { gardenDB } from '../services/gardenDB';
 import { getFlowerById } from '../data/flowers';
 import { getErrorMessage } from '../utils/getErrorMessage';
-import {
-  WATERING_COST,
-  WATERING_COOLDOWN_SECONDS,
-  WATER_DECREASE_RATE_PER_HOUR,
-} from '../constants/garden';
+import { WATERING_COST, WATERING_COOLDOWN_SECONDS } from '../constants/garden';
+import { GARDEN_UPDATED_EVENT } from '../constants/events';
+import { calculateWaterLevel, canWaterFlower as getWaterAvailability } from '../utils/gardenLogic';
 import { useWallet } from './useWallet';
 import { useToast } from './useToast';
 import type { OwnedFlower } from '../types';
@@ -31,16 +29,6 @@ interface UseGardenResult {
   reload: () => Promise<void>;
 }
 
-const calculateWaterLevel = (lastWatered: number): number => {
-  if (lastWatered === 0) return 50;
-
-  const now = Math.floor(Date.now() / 1000);
-  const hoursPassed = (now - lastWatered) / 3600;
-  const decrease = hoursPassed * WATER_DECREASE_RATE_PER_HOUR;
-
-  return Math.round(Math.max(0, 100 - decrease));
-};
-
 export const useGarden = (): UseGardenResult => {
   const { publicKey, isConnected } = useWallet();
   const { showToast } = useToast();
@@ -50,19 +38,11 @@ export const useGarden = (): UseGardenResult => {
   const [balanceError, setBalanceError] = useState('');
   const [loadError, setLoadError] = useState('');
 
-  const canWaterFlower = useCallback((lastWatered: number): WaterCheck => {
-    if (lastWatered === 0) return { canWater: true, hoursLeft: 0 };
-
-    const now = Math.floor(Date.now() / 1000);
-    const timeSinceWatering = now - lastWatered;
-
-    if (timeSinceWatering >= WATERING_COOLDOWN_SECONDS) {
-      return { canWater: true, hoursLeft: 0 };
-    }
-
-    const hoursLeft = Math.ceil((WATERING_COOLDOWN_SECONDS - timeSinceWatering) / 3600);
-    return { canWater: false, hoursLeft };
-  }, []);
+  const canWaterFlower = useCallback(
+    (lastWatered: number): WaterCheck =>
+      getWaterAvailability(lastWatered, WATERING_COOLDOWN_SECONDS),
+    []
+  );
 
   const fetchBalance = useCallback(async () => {
     if (!publicKey) return;
@@ -82,41 +62,36 @@ export const useGarden = (): UseGardenResult => {
     try {
       setLoading(true);
       setLoadError('');
-      const purchases = await gardenDB.getAllFlowers();
-      const userPurchases = purchases.filter((purchase) => purchase.publicKey === publicKey);
-      const flowerMap = new Map<number, OwnedFlower>();
+      const purchases = await gardenDB.getFlowersByUser(publicKey);
+      const purchasesByFlower = new Map<number, typeof purchases>();
 
-      for (const purchase of userPurchases) {
-        const existing = flowerMap.get(purchase.flowerId);
+      purchases.forEach((purchase) => {
+        const group = purchasesByFlower.get(purchase.flowerId) ?? [];
+        group.push(purchase);
+        purchasesByFlower.set(purchase.flowerId, group);
+      });
 
-        if (existing) {
-          existing.quantity += 1;
-          continue;
-        }
+      const ownedFlowers = await Promise.all(
+        Array.from(purchasesByFlower.entries()).map(async ([flowerId, flowerPurchases]) => {
+          const [purchase] = flowerPurchases;
+          const data = getFlowerById(flowerId);
+          const lastWatered = Number(await getLastWatering(publicKey, flowerId)) || 0;
 
-        const data = getFlowerById(purchase.flowerId);
-        let lastWatered = 0;
+          return {
+            id: flowerId,
+            name: data?.name ?? purchase.flowerName,
+            quantity: flowerPurchases.length,
+            waterLevel: calculateWaterLevel(lastWatered),
+            lastWatered,
+            image: data?.image ?? '',
+            rarity: data?.rarity ?? '',
+            rarityColor: data?.rarityColor ?? '',
+            incomeValue: data?.incomeValue ?? 0,
+          };
+        })
+      );
 
-        try {
-          lastWatered = Number(await getLastWatering(publicKey, purchase.flowerId));
-        } catch {
-          lastWatered = 0;
-        }
-
-        flowerMap.set(purchase.flowerId, {
-          id: purchase.flowerId,
-          name: data?.name ?? purchase.flowerName,
-          quantity: 1,
-          waterLevel: calculateWaterLevel(lastWatered),
-          lastWatered,
-          image: data?.image ?? '',
-          rarity: data?.rarity ?? '',
-          rarityColor: data?.rarityColor ?? '',
-          incomeValue: data?.incomeValue ?? 0,
-        });
-      }
-
-      setFlowers(Array.from(flowerMap.values()));
+      setFlowers(ownedFlowers);
     } catch (error) {
       setFlowers([]);
       setLoadError(getErrorMessage(error, 'Не удалось загрузить сад'));
@@ -141,6 +116,15 @@ export const useGarden = (): UseGardenResult => {
     void loadGardenData();
     void fetchBalance();
   }, [publicKey, loadGardenData, fetchBalance]);
+
+  useEffect(() => {
+    const handleGardenUpdate = () => {
+      void reload();
+    };
+
+    window.addEventListener(GARDEN_UPDATED_EVENT, handleGardenUpdate);
+    return () => window.removeEventListener(GARDEN_UPDATED_EVENT, handleGardenUpdate);
+  }, [reload]);
 
   const waterFlower = useCallback(
     async (flowerId: number, lastWatered: number) => {
