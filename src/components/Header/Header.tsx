@@ -122,9 +122,10 @@ const Header: React.FC = () => {
             type="button"
             className="theme-toggle"
             onClick={toggleTheme}
+            aria-pressed={theme === 'dark'}
             aria-label={theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'}
           >
-            {theme === 'dark' ? 'Light' : 'Dark'}
+            {theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
           </button>
         </div>
       </div>

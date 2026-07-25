@@ -1,5 +1,5 @@
 .xlm-token {
-  background: #ffffff;
+  background: var(--surface-strong);
   padding: 60px 80px;
   position: relative;
 }
@@ -25,7 +25,7 @@
 .xlm-title {
   font-size: 4rem;
   font-weight: 700;
-  color: #4A5A3A;
+  color: var(--text-primary);
   margin: 0;
   display: flex;
   align-items: center;
@@ -40,13 +40,13 @@
 .xlm-subtitle {
   font-size: 2.2rem;
   font-weight: 700;
-  color: #4A5A3A;
+  color: var(--text-primary);
   margin: 0 0 10px;
 }
 
 .xlm-text {
   font-size: 1.3rem;
-  color: #6B7A4B;
+  color: var(--text-muted);
   line-height: 1.8;
   margin: 0;
 }
@@ -64,7 +64,8 @@
   justify-content: center;
   gap: 12px;
   padding: 25px;
-  background: #F5F5F0;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 15px;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   text-align: center;
@@ -73,7 +74,7 @@
 
 .feature-item:hover {
   transform: translateY(-5px);
-  background: #EEEBE3;
+  background: var(--surface-strong);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
@@ -85,7 +86,7 @@
 .feature-text h4 {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #4A5A3A;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -96,7 +97,7 @@
 }
 
 .xlm-stats-card {
-  background: linear-gradient(135deg, #8B9A6B 0%, #6B7A4B 100%);
+  background: linear-gradient(135deg, #8b9a6b 0%, #6b7a4b 100%);
   border-radius: 25px;
   padding: 60px 40px;
   width: 100%;

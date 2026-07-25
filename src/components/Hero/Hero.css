@@ -242,21 +242,6 @@
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
 }
 
-.autoplay-toggle {
-  min-width: 32px;
-  min-height: 32px;
-  margin-top: -7px;
-  border: 2px solid rgba(255, 255, 255, 0.7);
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.35);
-  color: #fff;
-  cursor: pointer;
-}
-
-.autoplay-toggle:hover {
-  background: rgba(0, 0, 0, 0.55);
-}
-
 .hero-actions {
   display: flex;
   gap: 20px;

@@ -14,9 +14,6 @@ const Hero = () => {
   const navigate = useNavigate();
   const { setCurrentSlide } = useContext(SlideContext);
   const [currentSlide, setLocalSlide] = useState(0);
-  const [autoplay, setAutoplay] = useState(
-    () => !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-  );
   const [showWalletModal, setShowWalletModal] = useState(false);
 
   const slides = [
@@ -56,7 +53,7 @@ const Hero = () => {
   };
 
   useEffect(() => {
-    if (!autoplay) return;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
 
     const interval = setInterval(() => {
       setLocalSlide((prev) => {
@@ -67,22 +64,19 @@ const Hero = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [autoplay, slides.length, setCurrentSlide]);
+  }, [slides.length, setCurrentSlide]);
 
   // Функция переключения слайда с обнулением таймера
   const nextSlide = () => {
     updateSlide((currentSlide + 1) % slides.length);
-    setAutoplay(true); // Перезапускаем автоплей
   };
 
   const prevSlide = () => {
     updateSlide((currentSlide - 1 + slides.length) % slides.length);
-    setAutoplay(true); // Перезапускаем автоплей
   };
 
   const goToSlide = (index: number) => {
     updateSlide(index);
-    setAutoplay(true); // Перезапускаем автоплей
   };
 
   const scrollToHowToPlay = () => {
@@ -189,18 +183,6 @@ const Hero = () => {
                 aria-label={`Перейти на слайд ${index + 1}`}
               ></button>
             ))}
-            <button
-              type="button"
-              className="autoplay-toggle"
-              onClick={() => setAutoplay((current) => !current)}
-              aria-label={
-                autoplay
-                  ? 'Остановить автоматическую прокрутку'
-                  : 'Запустить автоматическую прокрутку'
-              }
-            >
-              {autoplay ? 'Ⅱ' : '▶'}
-            </button>
           </div>
         </div>
 

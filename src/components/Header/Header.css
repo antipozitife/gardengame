@@ -29,6 +29,15 @@
   background: linear-gradient(135deg, #93a267 0%, #485935 100%);
 }
 
+[data-theme='dark'] .header.header-slide-1,
+[data-theme='dark'] .header.header-slide-2 {
+  background: linear-gradient(135deg, #633044 0%, #3a1f2b 100%);
+}
+
+[data-theme='dark'] .header.header-slide-3 {
+  background: linear-gradient(135deg, #263820 0%, #152018 100%);
+}
+
 .header-container {
   max-width: 1400px;
   margin: 0 auto;

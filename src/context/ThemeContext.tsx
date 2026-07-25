@@ -38,7 +38,12 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    document.documentElement.style.colorScheme = theme;
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // The visual theme still works when browser storage is unavailable.
+    }
   }, [theme]);
 
   const setTheme = useCallback((next: ThemeMode) => {

@@ -1,4 +1,5 @@
 .how-to-play {
+  background: var(--surface);
   padding: 80px 20px;
   position: relative;
   overflow: hidden;
@@ -25,7 +26,7 @@
 .how-to-play-title {
   font-size: 3rem;
   font-weight: 700;
-  color: #4A5A3A;
+  color: var(--text-primary);
   text-align: center;
   margin: 0 0 60px;
   display: flex;
@@ -47,7 +48,8 @@
 }
 
 .step-card {
-  background: #F5F5F0;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
   border-radius: 20px;
   padding: 50px 35px;
   position: relative;
@@ -70,7 +72,7 @@
   left: 20px;
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #8B9A6B 0%, #6B7A4B 100%);
+  background: linear-gradient(135deg, #8b9a6b 0%, #6b7a4b 100%);
   color: #fff;
   border-radius: 50%;
   display: flex;
@@ -106,13 +108,13 @@
 .step-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #4A5A3A;
+  color: var(--text-primary);
   margin: 0 0 20px;
 }
 
 .step-description {
   font-size: 1.2rem;
-  color: #6B7A4B;
+  color: var(--text-muted);
   line-height: 1.7;
   margin: 0;
 }

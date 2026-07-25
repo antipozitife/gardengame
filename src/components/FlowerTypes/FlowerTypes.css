@@ -1,5 +1,5 @@
 .flower-types {
-  background: #F5F5F0;
+  background: var(--bg);
   padding: 80px 20px;
   position: relative;
   overflow: hidden;
@@ -13,7 +13,7 @@
 .flower-types-title {
   font-size: 3.5rem;
   font-weight: 700;
-  color: #4A5A3A;
+  color: var(--text-primary);
   text-align: center;
   margin: 0 0 70px;
   display: flex;
@@ -48,12 +48,12 @@
 
 .flowers-carousel-wrapper::before {
   left: 0;
-  background: linear-gradient(to right, #F5F5F0 0%, transparent 100%);
+  background: linear-gradient(to right, var(--bg) 0%, transparent 100%);
 }
 
 .flowers-carousel-wrapper::after {
   right: 0;
-  background: linear-gradient(to left, #F5F5F0 0%, transparent 100%);
+  background: linear-gradient(to left, var(--bg) 0%, transparent 100%);
 }
 
 .flowers-carousel-wrapper:hover .flowers-carousel-track {
@@ -70,7 +70,8 @@
 .flower-card {
   flex: 0 0 auto;
   width: 380px;
-  background: #ffffff;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
   border-radius: 25px;
   padding: 45px 30px;
   display: flex;
@@ -87,7 +88,6 @@
   z-index: 10;
 }
 
-
 .flower-image {
   max-width: 190px; /* Точный размер */
   max-height: 190px; /* Точный размер */
@@ -99,37 +99,37 @@
   animation: floatFlower 3s ease-in-out infinite;
 }
 
-.flower-card:nth-child(5n+1) .flower-image {
+.flower-card:nth-child(5n + 1) .flower-image {
   animation-delay: 0s;
 }
 
-.flower-card:nth-child(5n+2) .flower-image {
+.flower-card:nth-child(5n + 2) .flower-image {
   animation-delay: 0.3s;
 }
 
-.flower-card:nth-child(5n+3) .flower-image {
+.flower-card:nth-child(5n + 3) .flower-image {
   animation-delay: 0.6s;
 }
 
-.flower-card:nth-child(5n+4) .flower-image {
+.flower-card:nth-child(5n + 4) .flower-image {
   animation-delay: 0.9s;
 }
 
-.flower-card:nth-child(5n+5) .flower-image {
+.flower-card:nth-child(5n + 5) .flower-image {
   animation-delay: 1.2s;
 }
 
 .flower-name {
   font-size: 2rem;
   font-weight: 700;
-  color: #4A5A3A;
+  color: var(--text-primary);
   margin: 0 0 20px;
 }
 
 .flower-price {
   font-size: 20px !important;
   font-weight: 700;
-  color: #8B9A6B;
+  color: var(--accent);
   margin: 0 0 20px;
 }
 
