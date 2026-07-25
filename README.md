@@ -8,7 +8,7 @@
   Выращивайте цветы · Подписывайте операции через Albedo · Сохраняйте результат в блокчейне
 
   <p>
-    <a href="https://gardengame-mpkqykriv-antipozitifes-projects.vercel.app"><strong>Открыть приложение</strong></a>
+    <a href="https://gardengame-peach.vercel.app"><strong>Открыть приложение</strong></a>
     ·
     <a href="docs/architecture.md">Архитектура</a>
     ·
@@ -18,7 +18,7 @@
   </p>
 
   <p>
-    <a href="https://gardengame-mpkqykriv-antipozitifes-projects.vercel.app/">
+    <a href="https://gardengame-peach.vercel.app/">
       <img alt="Vercel deployment" src="https://img.shields.io/badge/Vercel-online-000?style=flat-square&logo=vercel" />
     </a>
     <a href="https://github.com/antipozitife/gardengame/actions/workflows/ci.yml">
@@ -32,16 +32,16 @@
   </p>
 </div>
 
-<a href="https://gardengame-mpkqykriv-antipozitifes-projects.vercel.app/">
+<a href="https://gardengame-peach.vercel.app/">
   <img
-    src="https://image.thum.io/get/width/1440/crop/900/noanimate/https://garden-game.vercel.app"
+    src="docs/screenshots/vercel-preview.png"
     alt="Актуальный интерфейс Garden Game на Vercel"
     width="100%"
   />
 </a>
 
 <div align="center">
-  <sub>Предпросмотр автоматически создаётся из актуальной версии, опубликованной на Vercel.</sub>
+  <sub>Реальный интерфейс production-версии. Нажмите на изображение, чтобы открыть приложение.</sub>
 </div>
 
 > [!NOTE]

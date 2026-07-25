@@ -2,7 +2,7 @@
 
 ## Vercel (primary)
 
-Live demo: https://garden-game.vercel.app
+Live demo: https://gardengame-peach.vercel.app
 
 1. Connect the GitHub repository to Vercel
 2. Framework preset: Create React App
