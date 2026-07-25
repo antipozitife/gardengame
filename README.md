@@ -1,137 +1,134 @@
 <div align="center">
-  <img src="src/assets/logo.png" alt="Garden Game logo" width="104" />
+  <img src="src/assets/logo.png" alt="Логотип Garden Game" width="104" />
 
   # Garden Game
 
-  **A Web3 flower garden powered by React, TypeScript and Stellar Soroban**
+  **Web3-сад на React, TypeScript и Stellar Soroban**
 
-  Grow flowers · Sign with Albedo · Settle on-chain
+  Выращивайте цветы · Подписывайте операции через Albedo · Сохраняйте результат в блокчейне
 
   <p>
-    <a href="https://garden-game.vercel.app"><strong>Live demo</strong></a>
+    <a href="https://garden-game.vercel.app"><strong>Открыть приложение</strong></a>
     ·
-    <a href="docs/architecture.md">Architecture</a>
+    <a href="docs/architecture.md">Архитектура</a>
     ·
-    <a href="docs/deployment.md">Deployment</a>
+    <a href="docs/deployment.md">Развёртывание</a>
     ·
-    <a href="CONTRIBUTING.md">Contributing</a>
+    <a href="CONTRIBUTING.md">Участие в разработке</a>
   </p>
 
   <p>
     <a href="https://garden-game.vercel.app">
-      <img alt="Live demo" src="https://img.shields.io/badge/demo-online-1f8a5b?style=flat-square" />
+      <img alt="Vercel deployment" src="https://img.shields.io/badge/Vercel-online-000?style=flat-square&logo=vercel" />
     </a>
     <a href="https://github.com/antipozitife/gardengame/actions/workflows/ci.yml">
-      <img alt="CI status" src="https://img.shields.io/github/actions/workflow/status/antipozitife/gardengame/ci.yml?branch=main&style=flat-square&label=CI" />
+      <img alt="Статус CI" src="https://img.shields.io/github/actions/workflow/status/antipozitife/gardengame/ci.yml?branch=main&style=flat-square&label=CI" />
     </a>
     <img alt="React 18" src="https://img.shields.io/badge/React-18-61dafb?style=flat-square&logo=react&logoColor=white" />
-    <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white" />
-    <img alt="Webpack" src="https://img.shields.io/badge/Webpack-5-8dd6f9?style=flat-square&logo=webpack&logoColor=white" />
+    <img alt="TypeScript strict" src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white" />
+    <img alt="Webpack 5" src="https://img.shields.io/badge/Webpack-5-8dd6f9?style=flat-square&logo=webpack&logoColor=white" />
     <img alt="Stellar testnet" src="https://img.shields.io/badge/Stellar-testnet-111?style=flat-square&logo=stellar&logoColor=white" />
-    <img alt="License MIT" src="https://img.shields.io/badge/license-MIT-2f6fed?style=flat-square" />
+    <img alt="Лицензия MIT" src="https://img.shields.io/badge/license-MIT-2f6fed?style=flat-square" />
   </p>
 </div>
 
 <a href="https://garden-game.vercel.app">
-  <img src="docs/screenshots/readme-hero.png" alt="Garden Game — futuristic Web3 greenhouse" width="100%" />
+  <img
+    src="https://image.thum.io/get/width/1440/crop/900/noanimate/https://garden-game.vercel.app"
+    alt="Актуальный интерфейс Garden Game на Vercel"
+    width="100%"
+  />
 </a>
 
-> [!NOTE]
-> Garden Game works on **Stellar testnet**. No real funds are required for the demo.
-
-## Preview
-
 <div align="center">
-  <a href="https://garden-game.vercel.app">
-    <img src="docs/screenshots/demo.gif" alt="Animated Garden Game preview" width="900" />
-  </a>
-  <br />
-  <sub>From seed to an on-chain garden — explore, buy, water and grow.</sub>
+  <sub>Предпросмотр автоматически создаётся из актуальной версии, опубликованной на Vercel.</sub>
 </div>
 
-## Why this project
+> [!NOTE]
+> Приложение работает в сети **Stellar testnet**. Для демонстрации не нужны реальные средства.
 
-Garden Game is more than a landing page. It demonstrates a complete frontend workflow around
-asynchronous blockchain operations: wallet authorization, transaction signing, network
-confirmation, local persistence and resilient UI states.
+## О проекте
 
-| Product experience | Engineering |
+Garden Game — это не только лендинг, а полноценный frontend-проект с асинхронным Web3-сценарием:
+подключением кошелька, подписью транзакций, ожиданием подтверждения сети, локальным хранением
+покупок и устойчивыми состояниями интерфейса.
+
+| Пользовательские возможности | Техническая реализация |
 | --- | --- |
-| Flower shop and personal garden | React 18 + strict TypeScript |
-| Albedo wallet connection | Stellar SDK + Soroban RPC |
-| Purchase and watering flows | IndexedDB persistence with `idb` |
-| Balance, cooldown and moisture states | Context + reusable domain hooks |
-| Light/dark themes and motion | Route-level code splitting |
-| Responsive and keyboard-friendly UI | Jest, RTL, ESLint, Prettier and CI |
+| Магазин цветов и личный сад | React 18 и TypeScript в strict-режиме |
+| Подключение кошелька Albedo | Stellar SDK и Soroban RPC |
+| Покупка и полив растений | IndexedDB через библиотеку `idb` |
+| Баланс, влажность и cooldown | Context API и предметные хуки |
+| Светлая и тёмная темы | CSS-переменные и Framer Motion |
+| Адаптивный интерфейс | Lazy loading и разделение кода по маршрутам |
 
-## Highlights
+## Ключевые особенности
 
-- **Confirmed transactions** — purchases are persisted only after Stellar reports success.
-- **Clear async UX** — signing, confirmation, network wait, success and error states are visible.
-- **Resilient data layer** — the garden is indexed by wallet and remains available in IndexedDB.
-- **Accessible interactions** — skip links, focus trap, focus restoration, ARIA progress values,
-  carousel controls and reduced-motion support.
-- **Fast navigation** — pages are split with `React.lazy` and loaded through `Suspense`.
-- **Production workflow** — lint, strict typecheck, 34 tests and Webpack build run in CI.
+- **Подтверждённые транзакции** — покупка сохраняется только после успешного ответа Stellar.
+- **Понятный асинхронный UX** — интерфейс показывает подпись, ожидание сети, успех и ошибки.
+- **Надёжное хранение** — растения сохраняются в IndexedDB и индексируются по адресу кошелька.
+- **Доступность** — skip-ссылки, focus trap, возврат фокуса, ARIA-индикаторы и reduced motion.
+- **Быстрая навигация** — страницы загружаются через `React.lazy` и `Suspense`.
+- **Автоматическая проверка** — ESLint, TypeScript, 34 теста и Webpack-сборка запускаются в CI.
 
-## How it works
+## Как проходит покупка
 
 ```mermaid
 sequenceDiagram
-    actor Player
-    participant UI as React UI
+    actor Игрок
+    participant UI as React-интерфейс
     participant Wallet as Albedo
     participant RPC as Soroban RPC
     participant DB as IndexedDB
 
-    Player->>UI: Select a flower
-    UI->>Wallet: Request transaction signature
-    Wallet-->>UI: Return signed XDR
-    UI->>RPC: Submit transaction
-    loop Until final status
-        UI->>RPC: Check transaction
-        RPC-->>UI: Pending / success / failed
+    Игрок->>UI: Выбирает цветок
+    UI->>Wallet: Запрашивает подпись транзакции
+    Wallet-->>UI: Возвращает подписанный XDR
+    UI->>RPC: Отправляет транзакцию
+    loop До финального статуса
+        UI->>RPC: Проверяет состояние
+        RPC-->>UI: Ожидание / успех / ошибка
     end
-    UI->>DB: Persist confirmed purchase
-    UI-->>Player: Refresh garden and balance
+    UI->>DB: Сохраняет подтверждённую покупку
+    UI-->>Игрок: Обновляет сад и баланс
 ```
 
-## Architecture
+## Архитектура
 
 ```text
 src/
-├── components/        feature components and reusable UI
-├── context/           wallet and theme providers
-├── hooks/             purchase, garden, wallet and toast logic
-├── services/          Stellar/Soroban and IndexedDB adapters
-├── pages/             lazy-loaded route screens
-├── data/              flower catalog
-├── constants/         domain and environment configuration
-├── types/             shared TypeScript contracts
-└── utils/             pure, tested garden/error logic
+├── components/        функциональные компоненты и UI-примитивы
+├── context/           провайдеры кошелька и темы
+├── hooks/             логика магазина, сада, кошелька и уведомлений
+├── services/          адаптеры Stellar/Soroban и IndexedDB
+├── pages/             страницы с ленивой загрузкой
+├── data/              каталог цветов
+├── constants/         настройки окружения и предметные константы
+├── types/             общие TypeScript-типы
+└── utils/             чистая и покрытая тестами логика
 ```
 
-The UI does not call browser storage or RPC endpoints directly. Components consume focused hooks;
-hooks coordinate domain state; services isolate infrastructure. More detail is available in
-[the architecture document](docs/architecture.md) and
-[the decision log](docs/decisions.md).
+Компоненты не обращаются к RPC или браузерному хранилищу напрямую. UI использует предметные хуки,
+хуки управляют состоянием, а сервисы изолируют работу с внешней инфраструктурой. Подробнее:
+[архитектура](docs/architecture.md) и
+[журнал технических решений](docs/decisions.md).
 
-## Tech stack
+## Технологии
 
-| Area | Tools |
+| Область | Инструменты |
 | --- | --- |
-| Interface | React 18, React Router, Framer Motion, CSS |
-| Language | TypeScript in strict mode |
-| Bundler | Webpack 5 through Create React App |
+| Интерфейс | React 18, React Router, Framer Motion, CSS |
+| Язык | TypeScript в strict-режиме |
+| Сборка | Webpack 5 через Create React App |
 | Web3 | Stellar SDK, Soroban RPC, Albedo |
-| Persistence | IndexedDB with `idb` |
-| Feedback | React Hot Toast, skeletons, spinners and error states |
-| Quality | Jest, React Testing Library, ESLint, Prettier, Husky |
-| Delivery | GitHub Actions, Vercel, Docker and nginx |
+| Хранение | IndexedDB и `idb` |
+| Обратная связь | React Hot Toast, skeleton, spinner и error states |
+| Качество | Jest, React Testing Library, ESLint, Prettier, Husky |
+| Доставка | GitHub Actions, Vercel, Docker и nginx |
 
-## Quick start
+## Локальный запуск
 
-Requirements: Node.js 20+ and npm.
+Требования: Node.js 20+ и npm.
 
 ```bash
 git clone https://github.com/antipozitife/gardengame.git
@@ -141,13 +138,13 @@ npm ci
 npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Приложение будет доступно по адресу [http://localhost:3000](http://localhost:3000).
 
-The checked-in environment defaults point to Stellar testnet. Public endpoints and contract
-addresses can be overridden through `.env`; never place secrets in `REACT_APP_*` variables because
-Webpack embeds them in the browser bundle.
+Значения по умолчанию настроены на Stellar testnet. Публичные RPC-адреса и адреса контрактов можно
+переопределить через `.env`. Секреты нельзя хранить в переменных `REACT_APP_*`, потому что Webpack
+встраивает их в клиентский bundle.
 
-## Quality gates
+## Проверка качества
 
 ```bash
 npm run lint
@@ -156,41 +153,42 @@ npm run test:ci
 npm run build
 ```
 
-Current test suite: **11 suites · 34 tests**.
+Текущее покрытие сценариев: **11 test suites · 34 теста**.
 
-Every pull request runs the same checks in
-[GitHub Actions](.github/workflows/ci.yml). A pre-push hook catches failures locally.
+На каждый pull request эти же проверки запускаются через
+[GitHub Actions](.github/workflows/ci.yml). Pre-push hook помогает обнаружить ошибки локально.
 
-## Docker
+## Запуск в Docker
 
 ```bash
 docker compose up --build
 ```
 
-The app is available at [http://localhost:8080](http://localhost:8080). The production image uses a
-multi-stage Node build and serves the static Webpack bundle through nginx with SPA fallback.
+Приложение будет доступно по адресу [http://localhost:8080](http://localhost:8080). Production-образ
+собирается в несколько стадий и раздаёт статический Webpack-bundle через nginx с поддержкой
+SPA-маршрутов.
 
-## Documentation
+## Документация
 
-- [Architecture](docs/architecture.md)
-- [Frontend notes](docs/frontend.md)
-- [Smart contract](docs/smart-contract.md)
-- [Deployment](docs/deployment.md)
-- [Architecture decisions](docs/decisions.md)
-- [Contributing guide](CONTRIBUTING.md)
-- [Changelog](CHANGELOG.md)
+- [Архитектура](docs/architecture.md)
+- [Frontend](docs/frontend.md)
+- [Смарт-контракт](docs/smart-contract.md)
+- [Развёртывание](docs/deployment.md)
+- [Технические решения](docs/decisions.md)
+- [Участие в разработке](CONTRIBUTING.md)
+- [История изменений](CHANGELOG.md)
 
-## Roadmap
+## Планы развития
 
-- [ ] Playwright end-to-end coverage
-- [ ] Achievements and daily rewards
-- [ ] On-chain balance as the primary garden source
-- [ ] Transaction history with Stellar Explorer links
+- [ ] End-to-end тесты на Playwright
+- [ ] Достижения и ежедневные награды
+- [ ] On-chain состояние сада как основной источник данных
+- [ ] История транзакций со ссылками на Stellar Explorer
 
-## License
+## Лицензия
 
-Released under the [MIT License](LICENSE).
+Проект распространяется по лицензии [MIT](LICENSE).
 
 <div align="center">
-  <strong>Built with React, TypeScript, Webpack and Stellar.</strong>
+  <strong>Создано с React, TypeScript, Webpack и Stellar.</strong>
 </div>
