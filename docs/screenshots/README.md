@@ -1,13 +1,18 @@
-# Screenshots
+# Скриншоты
 
-| File | Purpose |
+| Файл | Назначение |
 | --- | --- |
-| `demo-banner.png` | README preview banner |
-| `demo.gif` | Optional short gameplay loop (add when recorded) |
+| `vercel-preview.png` | Реальный снимок production-версии для главного README |
+| `banner.jpg` | Иллюстрация сада для документации и резервного оформления |
 
-Tips for a strong GIF:
+## Обновление preview
 
-1. Connect Albedo
-2. Buy a flower
-3. Show toast + garden update
-4. Keep under ~5MB
+После заметного изменения интерфейса:
+
+1. Откройте [production-версию](https://gardengame-peach.vercel.app).
+2. Установите размер окна 1280×720.
+3. Дождитесь загрузки hero-секции.
+4. Сохраните снимок как `vercel-preview.png`.
+5. Убедитесь, что изображение в README ведёт на актуальный production-домен.
+
+Рекомендуемый размер файла — не более 1 МБ.

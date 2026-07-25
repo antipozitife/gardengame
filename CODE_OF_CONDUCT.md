@@ -1,41 +1,42 @@
-# Contributor Covenant Code of Conduct
+# Кодекс поведения участников
 
-## Our Pledge
+## Наши обязательства
 
-We as members, contributors, and leaders pledge to make participation in our
-community a harassment-free experience for everyone, regardless of age, body
-size, visible or invisible disability, ethnicity, sex characteristics, gender
-identity and expression, level of experience, education, socio-economic status,
-nationality, personal appearance, race, caste, color, religion, or sexual
-identity and orientation.
+Мы, участники, авторы и руководители проекта, обязуемся создавать среду без притеснений для
+каждого человека независимо от возраста, телосложения, видимой или невидимой инвалидности,
+этнической принадлежности, половых признаков, гендерной идентичности и самовыражения, опыта,
+образования, социально-экономического положения, национальности, внешности, расы, касты, цвета
+кожи, религии, сексуальной идентичности и ориентации.
 
-We pledge to act and interact in ways that contribute to an open, welcoming,
-diverse, inclusive, and healthy community.
+Мы обязуемся действовать так, чтобы поддерживать открытое, гостеприимное, разнообразное,
+инклюзивное и здоровое сообщество.
 
-## Our Standards
+## Наши стандарты
 
-Examples of behavior that contributes to a positive environment:
+Примеры поведения, которое способствует созданию позитивной среды:
 
-- Demonstrating empathy and kindness
-- Being respectful of differing opinions
-- Giving and gracefully accepting constructive feedback
-- Focusing on what is best for the community
+- проявление эмпатии и доброжелательности;
+- уважение к различным мнениям и точкам зрения;
+- конструктивная обратная связь и спокойное отношение к ней;
+- внимание к интересам сообщества и проекта.
 
-Examples of unacceptable behavior:
+Примеры недопустимого поведения:
 
-- Harassment, trolling, or insulting comments
-- Public or private harassment
-- Publishing others' private information
-- Other conduct which could reasonably be considered inappropriate
+- травля, троллинг и оскорбительные комментарии;
+- публичное или личное преследование;
+- публикация чужой личной информации без разрешения;
+- иное поведение, которое обоснованно может считаться неуместным.
 
-## Enforcement
+## Применение правил
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the project maintainer via GitHub issues or privately.
+О случаях оскорбительного, агрессивного или иного недопустимого поведения можно сообщить
+сопровождающему проекта через GitHub Issues либо связаться с ним лично.
 
-All complaints will be reviewed and investigated promptly and fairly.
+Все обращения будут рассмотрены своевременно, справедливо и конфиденциально настолько, насколько
+это возможно.
 
-## Attribution
+## Источник
 
-This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org),
-version 2.1.
+Этот Кодекс поведения адаптирован из
+[Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/),
+версия 2.1.

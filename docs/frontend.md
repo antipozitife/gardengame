@@ -1,51 +1,66 @@
-# Frontend
+# Клиентская часть
 
-## Stack
+## Технологический стек
 
-- React 18 + TypeScript
+- React 18 и TypeScript
 - React Router
-- Context API (wallet + theme)
-- CSS variables + glassmorphism design system
-- Framer Motion for motion / presence
-- react-hot-toast for notifications
-- Webpack via Create React App (`react-scripts`)
+- Context API для кошелька и темы
+- CSS-переменные и дизайн в стиле glassmorphism
+- Framer Motion для анимаций
+- `react-hot-toast` для уведомлений
+- Webpack через Create React App (`react-scripts`)
 
-## Key hooks
+## Основные хуки
 
-- `useWallet()` — connect / disconnect Albedo, restore from localStorage
-- `useFlowers()` — catalog, balance, purchase flow with step labels
-- `useGarden()` — owned flowers, watering, cooldown
-- `useTheme()` — light / dark mode
+- `useWallet()` — подключение и отключение Albedo, восстановление ключа из `localStorage`
+- `useFlowers()` — каталог, баланс и этапы покупки
+- `useGarden()` — приобретённые цветы, полив и cooldown
+- `useTheme()` — светлая и тёмная темы
+- `useToast()` — единый интерфейс уведомлений
 
-## UI primitives
+## UI-примитивы
 
-- `Skeleton` / `FlowerCardSkeleton`
+- `Skeleton` и `FlowerCardSkeleton`
 - `Spinner`
 - `ErrorState`
-- Modal (`WalletModal`) with portal rendering
-- Carousel pause control + `prefers-reduced-motion`
+- `PageLoader`
+- модальное окно `WalletModal` с portal, focus trap и возвратом фокуса
 
-## Error UX
+Карусель автоматически переключает слайды и учитывает системную настройку
+`prefers-reduced-motion`.
 
-- Error Boundary for unexpected render crashes
-- Dedicated routes/pages for 404 / 500 / wallet / network issues
-- Friendly mapping via `getErrorMessage()`
+## Работа с ошибками
 
-## Testing
+- Error Boundary перехватывает неожиданные ошибки рендеринга.
+- Для ошибок 404, 500, кошелька и сети предусмотрены отдельные страницы.
+- `getErrorMessage()` преобразует технические ошибки в понятные сообщения.
+- В production внутренние детали ошибки не показываются пользователю.
 
-Jest + React Testing Library (CRA-native; Webpack project — no Vite migration).
+## Тестирование
 
-Coverage focus:
+Используются Jest и React Testing Library — нативный для CRA тестовый стек.
 
-- wallet connect/disconnect
-- flower purchase happy path
-- garden empty/owned states
-- error message mapping
-- theme toggle
+Покрыты основные сценарии:
 
-## Quality gates
+- подключение и отключение кошелька;
+- успешная покупка цветка;
+- пустой и заполненный сад;
+- преобразование ошибок;
+- переключение темы;
+- чистая логика полива и влажности.
+
+## Обязательные проверки
 
 - ESLint
-- TypeScript (`tsc --noEmit`)
-- Jest + React Testing Library
-- Production Webpack build through `react-scripts`
+- TypeScript: `tsc --noEmit`
+- Jest и React Testing Library
+- Production-сборка Webpack через `react-scripts`
+
+Локально полный набор проверок запускается командами:
+
+```bash
+npm run lint
+npm run typecheck
+npm run test:ci
+npm run build
+```

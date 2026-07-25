@@ -1,20 +1,26 @@
-# Deployment
+# Развёртывание
 
-## Vercel (primary)
+## Vercel
 
-Live demo: https://gardengame-peach.vercel.app
+Production-версия: [gardengame-peach.vercel.app](https://gardengame-peach.vercel.app)
 
-1. Connect the GitHub repository to Vercel
-2. Framework preset: Create React App
-3. Build command: `npm run build`
-4. Output directory: `build`
-5. Node version: 20+
+Настройки проекта:
+
+1. Подключить GitHub-репозиторий к Vercel.
+2. Выбрать шаблон Create React App.
+3. Указать команду сборки `npm run build`.
+4. Указать выходной каталог `build`.
+5. Использовать Node.js 20 или новее.
+6. Выбрать `main` в качестве production-ветки.
+
+Пуш в `main` запускает production-развёртывание. Ветки и Pull Request создают отдельные
+предварительные развёртывания.
 
 ## GitHub Actions
 
-Workflow: `.github/workflows/ci.yml`
+Конфигурация: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
 
-On every PR / push to `main`:
+Для каждого Pull Request и пуша в `main` выполняются:
 
 1. `npm ci`
 2. `npm run lint`
@@ -28,16 +34,20 @@ On every PR / push to `main`:
 docker compose up --build
 ```
 
-App: http://localhost:8080
+Приложение будет доступно по адресу [http://localhost:8080](http://localhost:8080).
 
-Image stages:
+Этапы создания образа:
 
-1. `node:20-alpine` — install + build
-2. `nginx:alpine` — serve static SPA with history fallback
+1. `node:20-alpine` — установка зависимостей и production-сборка.
+2. `nginx:alpine` — раздача статического SPA с резервной маршрутизацией на `index.html`.
 
-## Environment
+## Переменные окружения
 
-Copy `.env.example` → `.env` if you need local overrides.
+Скопируйте `.env.example` в `.env`, если нужны локальные переопределения:
+
+```bash
+cp .env.example .env
+```
 
 ```bash
 REACT_APP_STELLAR_NETWORK=testnet
@@ -48,5 +58,5 @@ REACT_APP_SHOP_ADDRESS=...
 REACT_APP_NATIVE_TOKEN_ADDRESS=...
 ```
 
-Все публичные значения имеют testnet-значения по умолчанию. Секретные ключи никогда не должны
-храниться в переменных `REACT_APP_*`: CRA встраивает их в клиентский bundle.
+Публичные параметры имеют testnet-значения по умолчанию. Секретные ключи нельзя хранить в
+переменных `REACT_APP_*`: CRA и Webpack встраивают их в клиентский bundle.

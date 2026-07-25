@@ -1,29 +1,32 @@
-# Changelog
+# История изменений
 
-All notable changes to this project will be documented in this file.
+В этом файле документируются все заметные изменения проекта.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Формат основан на стандарте [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/),
+а версии проекта соответствуют [семантическому версионированию](https://semver.org/lang/ru/).
 
-## [1.0.0] - 2026-07-23
+## [1.0.0] — 2026-07-23
 
-### Added
-- Full portfolio-ready documentation (`docs/`)
-- Dark mode via Theme Context
-- Error Boundary and dedicated error pages (404, 500, wallet, network)
-- Purchase flow UX steps (buying → wallet confirm → network → done)
-- `react-hot-toast` notifications
-- Framer Motion animations and glassmorphism UI refresh
-- Spinner component for async actions
-- GitHub Actions CI (lint, test, build)
-- Husky + lint-staged pre-commit hooks
-- Docker + docker-compose support
-- CONTRIBUTING, CODE_OF_CONDUCT, LICENSE, CHANGELOG
+### Добавлено
 
-### Changed
-- README rewritten to open-source portfolio standard
-- Project structure expanded (`hooks/`, `constants/`, `types/`, `components/ui/`)
-- Lighthouse-oriented SEO/accessibility improvements
+- Полная документация проекта в каталоге `docs/`
+- Тёмная тема на основе Theme Context
+- Error Boundary и отдельные страницы ошибок: 404, 500, кошелёк и сеть
+- Этапы покупки: начало → подтверждение в кошельке → ожидание сети → завершение
+- Уведомления через `react-hot-toast`
+- Анимации Framer Motion и обновлённый интерфейс в стиле glassmorphism
+- Компонент Spinner для асинхронных действий
+- GitHub Actions CI с проверкой кода, типов, тестов и сборки
+- Pre-commit хуки на Husky и lint-staged
+- Поддержка Docker и Docker Compose
+- Руководство для участников, кодекс поведения, лицензия и история изменений
 
-### Fixed
-- Stronger error mapping for wallet, network, and contract failures
+### Изменено
+
+- README приведён к формату портфолио open source-проекта
+- Расширена структура проекта: `hooks/`, `constants/`, `types/`, `components/ui/`
+- Улучшены SEO и доступность интерфейса
+
+### Исправлено
+
+- Улучшено преобразование ошибок кошелька, сети и смарт-контракта в понятные сообщения

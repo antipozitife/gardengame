@@ -1,41 +1,50 @@
-# Architecture Decision Records
+# Журнал архитектурных решений
 
-Short notes on why key technical choices were made.
+Краткое обоснование ключевых технических решений проекта.
 
-## ADR-001: Keep CRA + Webpack (not Vite)
+## ADR-001: сохранить CRA и Webpack
 
-**Decision:** Stay on Create React App / Webpack.
+**Решение:** использовать Create React App и Webpack, не переходя на Vite.
 
-**Why:** The project already ships on CRA; migrating to Vite mid-portfolio iteration adds risk without changing product value. Interviewers care more about architecture, tests, CI, and Web3 UX than the bundler brand.
+**Причина:** проект уже работает на CRA. Смена сборщика увеличила бы объём и риск изменений, не
+добавляя ценности продукту. Для портфолио важнее архитектура, тесты, CI и качество Web3 UX.
 
-**Consequence:** Jest + RTL remain the test stack (CRA-native). Vitest was intentionally not introduced.
+**Последствие:** Jest и React Testing Library остаются основным тестовым стеком. Vitest намеренно
+не добавляется.
 
-## ADR-002: Context + hooks instead of Redux/Zustand
+## ADR-002: Context и хуки вместо Redux или Zustand
 
-**Decision:** Use Context for wallet/theme and custom hooks for domain logic.
+**Решение:** использовать Context для кошелька и темы, а пользовательские хуки — для предметной
+логики.
 
-**Why:** State surface is small (wallet key, theme, flower/garden async flows). Hooks keep components thin and testable without extra store boilerplate.
+**Причина:** объём глобального состояния невелик: публичный ключ, тема и асинхронные операции
+магазина и сада. Хуки позволяют держать компоненты компактными без лишнего шаблонного кода.
 
-## ADR-003: IndexedDB mirror of purchases
+## ADR-003: локальное зеркало покупок в IndexedDB
 
-**Decision:** Persist purchases locally after successful Soroban tx.
+**Решение:** сохранять покупки локально после подтверждения Soroban-транзакции.
 
-**Why:** Instant garden UI without reconstructing full chain history on every visit. Contract remains source of payment truth; local DB is a read-optimized cache.
+**Причина:** сад отображается мгновенно без повторного чтения всей истории блокчейна. Контракт
+остаётся источником истины для платежей, а локальная база служит оптимизированным кешем чтения.
 
-## ADR-004: Friendly error mapping
+## ADR-004: единое преобразование ошибок
 
-**Decision:** Centralize message normalization in `getErrorMessage()`.
+**Решение:** нормализовать сообщения в `getErrorMessage()`.
 
-**Why:** Albedo / Horizon / Soroban errors are noisy. Consistent UX copy improves trust during wallet reject / network / contract failures.
+**Причина:** ошибки Albedo, Horizon и Soroban сложны для пользователя. Единые сообщения повышают
+доверие при отказе кошелька, сетевом сбое или ошибке контракта.
 
-## ADR-005: Route-level code splitting
+## ADR-005: разделение кода по маршрутам
 
-**Decision:** Load pages with `React.lazy` + `Suspense`.
+**Решение:** загружать страницы через `React.lazy` и `Suspense`.
 
-**Why:** Landing and game bundles separate cleanly; improves Lighthouse Performance on first paint for `/`.
+**Причина:** лендинг и игра попадают в отдельные части bundle, что сокращает объём первоначальной
+загрузки маршрута `/`.
 
-## ADR-006: Accessibility as a first-class UX concern
+## ADR-006: доступность как часть продукта
 
-**Decision:** Add landmarks, aria-labels, keyboard-friendly controls, and visible `:focus-visible` styles.
+**Решение:** использовать семантические области, ARIA-атрибуты, клавиатурное управление,
+`:focus-visible` и `prefers-reduced-motion`.
 
-**Why:** Many companies score a11y in interviews and Lighthouse Accessibility audits.
+**Причина:** доступность улучшает продукт для пользователей и демонстрирует зрелый подход к
+frontend-разработке.

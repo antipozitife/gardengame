@@ -1,41 +1,51 @@
-# Smart Contract
+# Смарт-контракт
 
-Soroban contract source: `contract/src/lib.rs`
+Исходный код Soroban-контракта: `contract/src/lib.rs`
 
-Network: **Stellar Testnet**
+Сеть: **Stellar Testnet**
 
-## Purpose
+## Назначение
 
-On-chain ownership and watering timestamps for flowers purchased with native XLM.
+Контракт хранит on-chain количество купленных цветов и время последнего полива. Оплата выполняется
+в нативной валюте XLM.
 
-## Entrypoints
+## Точки входа
 
 ### `buy_flower_with_payment`
 
-- Auth: buyer must authorize
-- Transfers XLM from buyer → shop
-- Increments persistent flower balance for `(buyer, flower_id)`
-- Increments total flowers for buyer
-- Valid `flower_id`: `1..5`
+- Покупатель должен авторизовать операцию.
+- XLM переводятся от покупателя магазину.
+- Увеличивается постоянный баланс для пары `(buyer, flower_id)`.
+- Увеличивается общее количество цветов пользователя.
+- Допустимые значения `flower_id`: от `1` до `5`.
 
 ### `water_single_flower`
 
-- Auth: user must authorize
-- Transfers watering fee in XLM
-- Stores ledger timestamp for `(user, flower_id)`
+- Пользователь должен авторизовать операцию.
+- Комиссия за полив переводится в XLM.
+- Для пары `(user, flower_id)` сохраняется время ledger.
 
 ### `get_last_watering`
 
-- Read-only helper used by the frontend to compute soil moisture / cooldown
+Read-only функция возвращает время последнего полива. Frontend использует его для вычисления
+влажности и cooldown.
 
-## Frontend integration
+## Интеграция с frontend
 
-`src/services/stellar.ts` builds transactions with Stellar SDK, prepares them via Soroban RPC,
-and signs through Albedo (`window.albedo.tx`).
+`src/services/stellar.ts`:
 
-Contract / shop / native token addresses live in `src/constants/stellar.ts`.
+1. собирает транзакцию через Stellar SDK;
+2. подготавливает её через Soroban RPC;
+3. запрашивает подпись через npm-пакет `@albedo-link/intent`;
+4. отправляет подписанную транзакцию;
+5. опрашивает сеть до статуса `SUCCESS` или `FAILED`.
 
-## Local persistence
+Адреса контракта, магазина и нативного токена находятся в `src/constants/stellar.ts` и могут быть
+переопределены через переменные `REACT_APP_*`.
 
-After a successful purchase, the app also writes to IndexedDB (`gardenDB`) so the garden UI
-can render quickly without re-scanning all chain history.
+## Локальное хранение
+
+После сетевого подтверждения приложение сохраняет покупку в IndexedDB через `gardenDB`. Это
+позволяет быстро отобразить сад без повторного сканирования всей истории блокчейна.
+
+IndexedDB является локальным кешем интерфейса, а блокчейн остаётся источником истины для платежей.

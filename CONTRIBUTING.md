@@ -1,55 +1,59 @@
-# Contributing to Garden Game
+# Участие в разработке Garden Game
 
-Thanks for your interest in contributing!
+Спасибо за интерес к проекту!
 
-## Development setup
+## Подготовка окружения
 
 ```bash
 git clone https://github.com/antipozitife/gardengame.git
 cd gardengame
-npm install
+npm ci
 npm start
 ```
 
-## Scripts
+## Команды
 
-| Command | Description |
+| Команда | Назначение |
 | --- | --- |
-| `npm start` | Dev server (Webpack / CRA) |
-| `npm run lint` | ESLint |
-| `npm run format` | Prettier |
-| `npm test` | Jest + RTL (watch) |
-| `npm run test:ci` | CI tests |
-| `npm run build` | Production build |
+| `npm start` | Локальный сервер разработки на Webpack/CRA |
+| `npm run lint` | Проверка ESLint |
+| `npm run typecheck` | Проверка типов TypeScript |
+| `npm run format` | Форматирование через Prettier |
+| `npm test` | Jest и RTL в режиме наблюдения |
+| `npm run test:ci` | Однократный запуск тестов для CI |
+| `npm run build` | Production-сборка |
 
-## Branch & PR workflow
+## Ветки и Pull Request
 
-1. Create a feature branch from `main`
-2. Keep commits focused and descriptive
-3. Ensure `lint`, `test:ci`, and `build` pass
-4. Open a Pull Request with a short summary and test plan
+1. Создайте функциональную ветку от `main`.
+2. Делайте небольшие тематические коммиты с понятными сообщениями.
+3. Убедитесь, что `lint`, `typecheck`, `test:ci` и `build` завершаются успешно.
+4. Откройте Pull Request с кратким описанием изменений и планом проверки.
 
-## Code style
+## Стиль кода
 
-- TypeScript for all new code
-- Prefer hooks for business logic (`useWallet`, `useFlowers`, `useGarden`)
-- Keep UI components presentational when possible
-- Use design tokens from CSS variables (`--color-*`, `--glass-*`)
-- Run Prettier before committing (Husky will enforce this)
+- Используйте TypeScript для нового кода.
+- Выносите предметную логику в хуки: `useWallet`, `useFlowers`, `useGarden`.
+- По возможности оставляйте UI-компоненты презентационными.
+- Используйте CSS-переменные и существующие дизайн-токены.
+- Запускайте Prettier перед коммитом; часть проверок автоматически выполняет Husky.
+- Сохраняйте доступность: семантические элементы, клавиатурное управление и ARIA-атрибуты.
 
-## Commit hooks
+## Git-хуки
 
-Pre-commit runs:
+Перед коммитом запускаются:
 
-- ESLint on staged `ts/tsx`
-- Prettier on staged files
-- Related tests via `lint-staged` / project scripts
+- ESLint для подготовленных `ts/tsx`-файлов;
+- Prettier для подготовленных файлов;
+- связанные команды проекта через `lint-staged`.
 
-## Reporting issues
+Перед отправкой изменений запускаются ESLint, проверка типов и тесты.
 
-Please include:
+## Сообщения об ошибках
 
-- Steps to reproduce
-- Expected vs actual behavior
-- Browser / network (Stellar testnet) details
-- Screenshots if UI-related
+Пожалуйста, приложите:
+
+- шаги для воспроизведения;
+- ожидаемое и фактическое поведение;
+- сведения о браузере и сети Stellar;
+- скриншоты, если проблема относится к интерфейсу.

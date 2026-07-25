@@ -1,50 +1,54 @@
-# Architecture
+# Архитектура
 
-## Overview
+## Обзор
 
-Garden Game is a React SPA that talks to a Soroban smart contract on Stellar testnet
-through the Albedo wallet, while keeping purchased flowers in IndexedDB for a fast local garden view.
+Garden Game — одностраничное React-приложение, которое взаимодействует со смарт-контрактом
+Soroban в сети Stellar testnet через кошелёк Albedo. Подтверждённые покупки также сохраняются в
+IndexedDB, чтобы быстро отображать локальный сад.
 
 ```text
-Browser
-  ├── React UI (pages/components)
-  ├── Hooks (useWallet / useFlowers / useGarden)
-  ├── Services
-  │     ├── stellar.ts  → Horizon + Soroban RPC + Albedo signing
-  │     └── gardenDB.ts → IndexedDB persistence
-  └── Context
+Браузер
+  ├── React UI: страницы и компоненты
+  ├── Хуки: useWallet / useFlowers / useGarden
+  ├── Сервисы
+  │     ├── stellar.ts  → Horizon + Soroban RPC + подпись Albedo
+  │     └── gardenDB.ts → хранение в IndexedDB
+  └── Контексты
         ├── WalletProvider
         └── ThemeProvider
 ```
 
-## Folder responsibilities
+## Ответственность каталогов
 
-| Folder | Responsibility |
+| Каталог | Назначение |
 | --- | --- |
-| `components/` | Presentational UI and feature widgets |
-| `components/ui/` | Reusable primitives (Skeleton, Spinner, ErrorState) |
-| `pages/` | Route-level screens |
-| `hooks/` | Business logic & async orchestration |
-| `services/` | External systems (Stellar, IndexedDB, APIs) |
-| `context/` | Cross-cutting providers (wallet, theme) |
-| `constants/` | Addresses, cooldowns, storage keys |
-| `types/` | Shared TypeScript contracts |
-| `utils/` | Pure helpers |
-| `data/` | Static game catalog |
-| `assets/` | Images / media |
+| `components/` | Компоненты интерфейса и функциональные виджеты |
+| `components/ui/` | Переиспользуемые примитивы: Skeleton, Spinner, ErrorState |
+| `pages/` | Экраны уровня маршрутов |
+| `hooks/` | Предметная логика и координация асинхронных действий |
+| `services/` | Внешние системы: Stellar, IndexedDB и API |
+| `context/` | Глобальные провайдеры кошелька и темы |
+| `constants/` | Адреса, интервалы, события и ключи хранилища |
+| `types/` | Общие TypeScript-контракты |
+| `utils/` | Чистые вспомогательные функции |
+| `data/` | Статический каталог игры |
+| `assets/` | Изображения и медиафайлы |
 
-## Data flow (buy flower)
+## Поток данных при покупке цветка
 
-1. User clicks **Buy** in `FlowerShop`
-2. `useFlowers.buy()` validates wallet + balance
-3. UX steps update: buying → wallet confirm → network wait → done
-4. `stellar.buyFlower()` prepares Soroban tx and asks Albedo to sign
-5. On success, purchase is stored in IndexedDB
-6. Toast confirms success and garden/balance refresh
+1. Пользователь нажимает «Купить» в `FlowerShop`.
+2. `useFlowers.buy()` проверяет подключение кошелька и баланс.
+3. Интерфейс показывает этапы покупки и ожидания.
+4. `stellar.buyFlower()` собирает Soroban-транзакцию и запрашивает подпись Albedo.
+5. Подписанная транзакция отправляется в Soroban RPC.
+6. Приложение опрашивает сеть до получения финального статуса.
+7. Только подтверждённая покупка сохраняется в IndexedDB.
+8. Событие обновляет сад и баланс без полной перезагрузки страницы.
 
-## Why this split
+## Почему выбрано такое разделение
 
-- UI stays thin and testable
-- Blockchain quirks live in `services/stellar.ts`
-- Hooks encapsulate product rules (cooldown, balance checks)
-- Context keeps auth/theme global without prop drilling
+- UI остаётся компактным и удобным для тестирования.
+- Особенности блокчейна изолированы в `services/stellar.ts`.
+- Хуки содержат правила продукта: cooldown, баланс и этапы операций.
+- Context предоставляет глобальное состояние кошелька и темы без prop drilling.
+- Чистые функции предметной области тестируются без React и сетевых зависимостей.
