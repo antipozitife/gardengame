@@ -66,6 +66,12 @@
   font-size: 0.9rem;
 }
 
+.local-data-label {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--text-muted);
+}
+
 .address-box button {
   border: none;
   border-radius: 999px;

@@ -215,7 +215,26 @@
 
   .flowers-carousel-track {
     gap: 30px;
-    animation: scroll 30s linear infinite;
+    animation: none;
+  }
+
+  .flowers-carousel-wrapper {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 20px;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .flowers-carousel-wrapper::before,
+  .flowers-carousel-wrapper::after {
+    display: none;
+  }
+
+  .flower-card {
+    scroll-snap-align: center;
   }
 
   .flower-card {
@@ -250,10 +269,6 @@
     font-size: 1rem;
   }
 
-  .flowers-carousel-wrapper::before,
-  .flowers-carousel-wrapper::after {
-    width: 180px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -274,7 +289,6 @@
 
   .flowers-carousel-track {
     gap: 20px;
-    animation: scroll 25s linear infinite;
   }
 
   .flower-card {
@@ -309,8 +323,4 @@
     font-size: 0.95rem;
   }
 
-  .flowers-carousel-wrapper::before,
-  .flowers-carousel-wrapper::after {
-    width: 120px;
-  }
 }

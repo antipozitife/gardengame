@@ -131,10 +131,11 @@
 }
 
 .stat-value {
-  font-size: 2.2rem !important;
+  font-size: clamp(1rem, 1.7vw, 1.55rem) !important;
   font-weight: 700;
   color: var(--theme-on-dark);
-  word-break: break-all;
+  white-space: nowrap;
+  word-break: normal;
   line-height: 1.3;
 }
 
@@ -176,7 +177,7 @@
   }
 
   .stat-value {
-    font-size: 1.6rem;
+    font-size: 1.2rem !important;
   }
 
   .feature-text h4 {
@@ -229,7 +230,7 @@
   }
 
   .stat-value {
-    font-size: 1.5rem;
+    font-size: 1.15rem !important;
   }
 
   .stat-label {
@@ -288,6 +289,6 @@
   }
 
   .stat-value {
-    font-size: 1.3rem;
+    font-size: 1rem !important;
   }
 }

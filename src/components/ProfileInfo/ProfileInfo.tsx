@@ -117,7 +117,16 @@ const ProfileInfo: React.FC = () => {
       <div className="address-section">
         <p>{isDemo ? 'Режим:' : 'Публичный ключ:'}</p>
         <div className="address-box">
-          <code>{isDemo ? 'Без кошелька · локальные данные' : publicKey}</code>
+          <code>
+            {isDemo ? (
+              <>
+                Без кошелька
+                <span className="local-data-label">Локальные данные</span>
+              </>
+            ) : (
+              publicKey
+            )}
+          </code>
           {!isDemo && <button onClick={() => void handleCopy()}>📋 Копировать</button>}
         </div>
       </div>
