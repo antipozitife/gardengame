@@ -19,6 +19,8 @@
   --glass-blur: blur(16px);
   --theme-white: #fff;
   --theme-white-rgb: 255 255 255;
+  --theme-on-dark: #fff;
+  --theme-on-dark-rgb: 255 255 255;
 }
 
 [data-theme='dark'] {
@@ -35,6 +37,8 @@
   --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
   --theme-white: #000;
   --theme-white-rgb: 0 0 0;
+  --theme-on-dark: #fff;
+  --theme-on-dark-rgb: 255 255 255;
 }
 
 * {
@@ -99,7 +103,7 @@ input:focus-visible,
   padding: 0.65rem 1rem;
   border-radius: 999px;
   background: var(--accent);
-  color: var(--theme-white);
+  color: var(--theme-on-dark);
   font-weight: 700;
   text-decoration: none;
 }
@@ -132,7 +136,7 @@ input:focus-visible,
 
 .btn-primary {
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: var(--theme-white);
+  color: var(--theme-on-dark);
 }
 
 .btn-primary:hover {

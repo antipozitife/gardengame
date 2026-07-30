@@ -149,7 +149,7 @@
   font-family: 'Playwrite CZ', cursive;
   font-size: 3.5rem;
   font-weight: 700;
-  color: var(--theme-white);
+  color: var(--theme-on-dark);
   text-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
   line-height: 1.3;
   margin: 0;
@@ -177,7 +177,7 @@
   top: 50%;
   transform: translateY(-50%);
   background: rgb(var(--theme-white-rgb) / 0.25);
-  color: var(--theme-white);
+  color: var(--theme-on-dark);
   border: none;
   width: 60px;
   height: 60px;
@@ -193,7 +193,7 @@
 
 .slider-btn:hover {
   background: rgb(var(--theme-white-rgb) / 0.4);
-  border-color: rgb(var(--theme-white-rgb) / 0.7);
+  border-color: rgb(var(--theme-on-dark-rgb) / 0.7);
   transform: translateY(-50%) scale(1.15);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
@@ -237,7 +237,7 @@
 
 .dot.active {
   background: var(--theme-white);
-  border-color: var(--theme-white);
+  border-color: var(--theme-on-dark);
   transform: scale(1.4);
   box-shadow: 0 0 10px rgb(var(--theme-white-rgb) / 0.7);
 }
@@ -280,14 +280,14 @@
 
 .btn-secondary {
   background: rgb(var(--theme-white-rgb) / 0.2);
-  color: var(--theme-white);
+  color: var(--theme-on-dark);
   border: 2.5px solid rgb(var(--theme-white-rgb) / 0.8);
   backdrop-filter: blur(12px);
 }
 
 .btn-secondary:hover {
   background: rgb(var(--theme-white-rgb) / 0.3);
-  border-color: var(--theme-white);
+  border-color: var(--theme-on-dark);
   transform: translateY(-5px);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
 }

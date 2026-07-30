@@ -61,7 +61,7 @@
   position: absolute;
   top: 0.75rem;
   left: 0.75rem;
-  color: var(--theme-white);
+  color: var(--theme-on-dark);
   font-size: 0.75rem;
   font-weight: 700;
   padding: 0.25rem 0.55rem;
@@ -99,7 +99,7 @@
   border-radius: 999px;
   padding: 0.7rem 1rem;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: var(--theme-white);
+  color: var(--theme-on-dark);
   font-weight: 700;
   cursor: pointer;
 }

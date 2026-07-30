@@ -137,7 +137,7 @@
   padding: 12px 28px;
   border-radius: 50px;
   border: none;
-  color: var(--theme-white);
+  color: var(--theme-on-dark);
   font-weight: 700;
   font-size: 1.1rem;
   transition: all 0.3s ease;

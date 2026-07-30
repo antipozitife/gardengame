@@ -23,7 +23,7 @@ const Hero = () => {
       image: romashka,
       bgImage: bgFlowers1,
       bgClass: 'bg-slide-1',
-      titleColor: 'var(--theme-white)',
+      titleColor: 'var(--theme-on-dark)',
       shadowBlur: 'rgba(0, 0, 0, 0.6)',
     },
     {
@@ -32,7 +32,7 @@ const Hero = () => {
       image: roza,
       bgImage: bgFlowers2,
       bgClass: 'bg-slide-2',
-      titleColor: 'var(--theme-white)',
+      titleColor: 'var(--theme-on-dark)',
       shadowBlur: 'rgba(0, 0, 0, 0.6)',
     },
     {
