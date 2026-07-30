@@ -274,6 +274,22 @@
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
 }
 
+[data-theme='dark'] .hero-actions .btn-primary {
+  background-image:
+    linear-gradient(135deg, #f8f8f8 0%, #000 100%),
+    linear-gradient(135deg, #000 0%, #f8f8f8 100%);
+  background-clip: text, border-box;
+  -webkit-background-clip: text, border-box;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme='dark'] .hero-actions .btn-primary:hover {
+  background-image:
+    linear-gradient(135deg, #000 0%, #f8f8f8 100%),
+    linear-gradient(135deg, #f8f8f8 0%, #000 100%);
+}
+
 .btn-primary:active {
   transform: translateY(-2px);
 }
