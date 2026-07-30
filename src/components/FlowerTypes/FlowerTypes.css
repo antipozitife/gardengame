@@ -63,8 +63,8 @@
 .flowers-carousel-track {
   display: flex;
   gap: 40px;
-  animation: scroll 35s linear infinite;
   width: max-content;
+  will-change: scroll-position;
 }
 
 .flower-card {
@@ -149,15 +149,6 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
 }
 
-@keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-33.333%);
-  }
-}
-
 @media (max-width: 1024px) {
   .flower-types-title {
     font-size: 3rem;
@@ -215,7 +206,6 @@
 
   .flowers-carousel-track {
     gap: 30px;
-    animation: none;
   }
 
   .flowers-carousel-wrapper {
