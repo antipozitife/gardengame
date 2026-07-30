@@ -2,6 +2,7 @@ import {
   DEMO_BALANCE_STORAGE_KEY,
   DEMO_WATERING_STORAGE_KEY,
 } from '../constants/storage';
+import { gardenDB } from './gardenDB';
 
 export const DEMO_PUBLIC_KEY = 'DEMO-GARDEN-PORTFOLIO';
 export const DEMO_INITIAL_BALANCE = 1000;
@@ -38,4 +39,10 @@ export const waterDemoFlower = (flowerId: number, cost: number): number => {
   history[flowerId] = Math.floor(Date.now() / 1000);
   localStorage.setItem(DEMO_WATERING_STORAGE_KEY, JSON.stringify(history));
   return spendDemoBalance(cost);
+};
+
+export const resetDemoGame = async (): Promise<void> => {
+  localStorage.removeItem(DEMO_BALANCE_STORAGE_KEY);
+  localStorage.removeItem(DEMO_WATERING_STORAGE_KEY);
+  await gardenDB.deleteFlowersByUser(DEMO_PUBLIC_KEY);
 };

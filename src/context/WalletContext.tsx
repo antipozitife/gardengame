@@ -9,7 +9,7 @@ import React, {
 import { connectAlbedo } from '../services/stellar';
 import { WALLET_STORAGE_KEY, WALLET_TYPE_KEY } from '../constants/storage';
 import type { WalletContextValue } from '../types';
-import { DEMO_PUBLIC_KEY } from '../services/demoGame';
+import { DEMO_PUBLIC_KEY, resetDemoGame } from '../services/demoGame';
 import { GAME_ACCESS_MODE } from '../constants/gameMode';
 
 const WalletContext = createContext<WalletContextValue | null>(null);
@@ -36,7 +36,8 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     return key;
   }, []);
 
-  const startDemo = useCallback(() => {
+  const startDemo = useCallback(async () => {
+    await resetDemoGame();
     localStorage.setItem(WALLET_STORAGE_KEY, DEMO_PUBLIC_KEY);
     localStorage.setItem(WALLET_TYPE_KEY, 'demo');
     setPublicKey(DEMO_PUBLIC_KEY);

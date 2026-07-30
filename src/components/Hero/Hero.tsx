@@ -89,9 +89,9 @@ const Hero = () => {
     }
   };
 
-  const handlePlayClick = () => {
+  const handlePlayClick = async () => {
     if (GAME_ACCESS_MODE === 'demo') {
-      startDemo();
+      await startDemo();
       navigate('/game');
       return;
     }
@@ -196,7 +196,7 @@ const Hero = () => {
         </div>
 
         <div className="hero-actions">
-          <button type="button" className="btn-primary" onClick={handlePlayClick}>
+          <button type="button" className="btn-primary" onClick={() => void handlePlayClick()}>
             Начать играть
           </button>
           <button type="button" className="btn-secondary" onClick={scrollToHowToPlay}>

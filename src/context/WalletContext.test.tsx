@@ -9,6 +9,11 @@ jest.mock('../services/stellar', () => ({
   connectAlbedo: jest.fn(),
 }));
 
+jest.mock('../services/demoGame', () => ({
+  DEMO_PUBLIC_KEY: 'DEMO-GARDEN-PORTFOLIO',
+  resetDemoGame: jest.fn().mockResolvedValue(undefined),
+}));
+
 const mockedConnectAlbedo = connectAlbedo as jest.MockedFunction<typeof connectAlbedo>;
 
 const TestConsumer = () => {
@@ -26,7 +31,7 @@ const TestConsumer = () => {
       <button type="button" onClick={disconnectWallet}>
         Disconnect
       </button>
-      <button type="button" onClick={startDemo}>
+      <button type="button" onClick={() => void startDemo()}>
         Demo
       </button>
     </div>

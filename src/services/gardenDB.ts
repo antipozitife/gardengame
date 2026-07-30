@@ -57,6 +57,15 @@ class GardenDB {
     const db = await this.init();
     return db.getAllFromIndex('flowers', 'by-publicKey', publicKey);
   }
+
+  async deleteFlowersByUser(publicKey: string): Promise<void> {
+    const db = await this.init();
+    const keys = await db.getAllKeysFromIndex('flowers', 'by-publicKey', publicKey);
+    const transaction = db.transaction('flowers', 'readwrite');
+
+    await Promise.all(keys.map((key) => transaction.store.delete(key)));
+    await transaction.done;
+  }
 }
 
 export const gardenDB = new GardenDB();

@@ -17,7 +17,7 @@ const GamePage: React.FC = () => {
   useEffect(() => {
     if (!publicKey) {
       if (GAME_ACCESS_MODE === 'demo') {
-        startDemo();
+        void startDemo();
       } else {
         setShowWalletModal(true);
       }

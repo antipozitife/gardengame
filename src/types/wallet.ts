@@ -3,6 +3,6 @@ export interface WalletContextValue {
   isConnected: boolean;
   isDemo: boolean;
   connectWallet: () => Promise<string>;
-  startDemo: () => string;
+  startDemo: () => Promise<string>;
   disconnectWallet: () => void;
 }
