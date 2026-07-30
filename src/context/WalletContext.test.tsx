@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { connectAlbedo } from '../services/stellar';
 import { useWallet } from './WalletContext';
 import { renderWithProviders } from '../tests/testUtils';
-import { WALLET_STORAGE_KEY } from '../constants/storage';
+import { WALLET_STORAGE_KEY, WALLET_TYPE_KEY } from '../constants/storage';
 
 jest.mock('../services/stellar', () => ({
   connectAlbedo: jest.fn(),
@@ -12,17 +12,22 @@ jest.mock('../services/stellar', () => ({
 const mockedConnectAlbedo = connectAlbedo as jest.MockedFunction<typeof connectAlbedo>;
 
 const TestConsumer = () => {
-  const { publicKey, isConnected, connectWallet, disconnectWallet } = useWallet();
+  const { publicKey, isConnected, isDemo, connectWallet, startDemo, disconnectWallet } =
+    useWallet();
 
   return (
     <div>
       <span data-testid="public-key">{publicKey ?? 'none'}</span>
       <span data-testid="is-connected">{isConnected ? 'yes' : 'no'}</span>
+      <span data-testid="is-demo">{isDemo ? 'yes' : 'no'}</span>
       <button type="button" onClick={() => void connectWallet()}>
         Connect
       </button>
       <button type="button" onClick={disconnectWallet}>
         Disconnect
+      </button>
+      <button type="button" onClick={startDemo}>
+        Demo
       </button>
     </div>
   );
@@ -72,5 +77,16 @@ describe('WalletContext', () => {
     expect(screen.getByTestId('public-key')).toHaveTextContent('none');
     expect(screen.getByTestId('is-connected')).toHaveTextContent('no');
     expect(localStorage.getItem(WALLET_STORAGE_KEY)).toBeNull();
+  });
+
+  it('starts a persistent demo session without connecting Albedo', async () => {
+    renderWithProviders(<TestConsumer />);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Demo' }));
+
+    expect(screen.getByTestId('is-connected')).toHaveTextContent('yes');
+    expect(screen.getByTestId('is-demo')).toHaveTextContent('yes');
+    expect(localStorage.getItem(WALLET_TYPE_KEY)).toBe('demo');
+    expect(mockedConnectAlbedo).not.toHaveBeenCalled();
   });
 });

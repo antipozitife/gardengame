@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWallet } from '../../hooks/useWallet';
 import { useToast } from '../../hooks/useToast';
@@ -8,14 +8,42 @@ import { HORIZON_URL } from '../../constants/stellar';
 import Skeleton from '../ui/Skeleton/Skeleton';
 import ErrorState from '../ui/ErrorState/ErrorState';
 import './ProfileInfo.css';
+import { getDemoBalance } from '../../services/demoGame';
+import { GARDEN_UPDATED_EVENT } from '../../constants/events';
 
 const ProfileInfo: React.FC = () => {
-  const { publicKey, disconnectWallet } = useWallet();
+  const { publicKey, isDemo, disconnectWallet } = useWallet();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const [xlmBalance, setXlmBalance] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const loadProfile = useCallback(
+    async (key: string) => {
+      setLoading(true);
+      setError('');
+      if (isDemo) {
+        setXlmBalance(getDemoBalance());
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${HORIZON_URL}/accounts/${key}`);
+        if (!response.ok) {
+          throw new Error('Не удалось загрузить данные аккаунта');
+        }
+        const balance = await getXLMBalance(key);
+        setXlmBalance(balance);
+      } catch (err) {
+        setError(getErrorMessage(err, 'Не удалось загрузить профиль'));
+      } finally {
+        setLoading(false);
+      }
+    },
+    [isDemo]
+  );
 
   useEffect(() => {
     if (publicKey) {
@@ -24,28 +52,19 @@ const ProfileInfo: React.FC = () => {
       setLoading(false);
       setError('Кошелек не подключен. Подключите Albedo, чтобы играть.');
     }
-  }, [publicKey]);
+  }, [publicKey, loadProfile]);
 
-  const loadProfile = async (key: string) => {
-    setLoading(true);
-    setError('');
-    try {
-      const response = await fetch(`${HORIZON_URL}/accounts/${key}`);
-      if (!response.ok) {
-        throw new Error('Не удалось загрузить данные аккаунта');
-      }
-      const balance = await getXLMBalance(key);
-      setXlmBalance(balance);
-    } catch (err) {
-      setError(getErrorMessage(err, 'Не удалось загрузить профиль'));
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    if (!isDemo || !publicKey) return;
+
+    const refreshDemoProfile = () => setXlmBalance(getDemoBalance());
+    window.addEventListener(GARDEN_UPDATED_EVENT, refreshDemoProfile);
+    return () => window.removeEventListener(GARDEN_UPDATED_EVENT, refreshDemoProfile);
+  }, [isDemo, publicKey]);
 
   const handleDisconnect = () => {
     disconnectWallet();
-    showToast('Кошелёк отключён', 'info');
+    showToast(isDemo ? 'Демо-режим завершён' : 'Кошелёк отключён', 'info');
     navigate('/');
   };
 
@@ -88,23 +107,23 @@ const ProfileInfo: React.FC = () => {
     <div className="profile-info">
       <div className="profile-header">
         <div>
-          <h2>Мой профиль</h2>
+          <h2>{isDemo ? 'Демо-профиль' : 'Мой профиль'}</h2>
         </div>
         <button onClick={handleDisconnect} className="disconnect-btn">
-          Отключить
+          {isDemo ? 'Выйти из демо' : 'Отключить'}
         </button>
       </div>
 
       <div className="address-section">
-        <p>Публичный ключ:</p>
+        <p>{isDemo ? 'Режим:' : 'Публичный ключ:'}</p>
         <div className="address-box">
-          <code>{publicKey}</code>
-          <button onClick={() => void handleCopy()}>📋 Копировать</button>
+          <code>{isDemo ? 'Без кошелька · локальные данные' : publicKey}</code>
+          {!isDemo && <button onClick={() => void handleCopy()}>📋 Копировать</button>}
         </div>
       </div>
 
       <div className="address-section">
-        <p>Баланс:</p>
+        <p>{isDemo ? 'Виртуальный баланс:' : 'Баланс:'}</p>
         <strong>{xlmBalance.toFixed(2)} XLM</strong>
       </div>
     </div>

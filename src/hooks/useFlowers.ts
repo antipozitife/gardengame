@@ -8,6 +8,7 @@ import { GARDEN_UPDATED_EVENT } from '../constants/events';
 import { useWallet } from './useWallet';
 import { useToast } from './useToast';
 import type { Flower } from '../types';
+import { getDemoBalance, spendDemoBalance } from '../services/demoGame';
 
 interface UseFlowersResult {
   flowers: Flower[];
@@ -22,7 +23,7 @@ interface UseFlowersResult {
 }
 
 export const useFlowers = (): UseFlowersResult => {
-  const { publicKey, isConnected } = useWallet();
+  const { publicKey, isConnected, isDemo } = useWallet();
   const { showToast } = useToast();
   const [userBalance, setUserBalance] = useState<number | null>(null);
   const [balanceError, setBalanceError] = useState('');
@@ -38,6 +39,11 @@ export const useFlowers = (): UseFlowersResult => {
     }
 
     setBalanceError('');
+    if (isDemo) {
+      setUserBalance(getDemoBalance());
+      return;
+    }
+
     try {
       const balance = await getXLMBalance(publicKey);
       setUserBalance(typeof balance === 'number' ? balance : 0);
@@ -45,7 +51,7 @@ export const useFlowers = (): UseFlowersResult => {
       setUserBalance(null);
       setBalanceError(getErrorMessage(error, 'Не удалось загрузить баланс'));
     }
-  }, [publicKey]);
+  }, [publicKey, isDemo]);
 
   useEffect(() => {
     void gardenDB.init();
@@ -87,10 +93,22 @@ export const useFlowers = (): UseFlowersResult => {
         setPurchaseStep('waiting');
         showToast(PURCHASE_STEP_LABELS.waiting, 'info');
 
-        const txHash = await buyFlower(publicKey, flower.id, flower.price, flower.name);
+        const txHash = isDemo
+          ? `demo-${Date.now()}`
+          : await buyFlower(publicKey, flower.id, flower.price, flower.name);
+
+        if (isDemo) {
+          await gardenDB.addFlower(flower.id, flower.name, publicKey, flower.price, txHash);
+          spendDemoBalance(flower.price);
+        }
 
         setPurchaseStep('done');
-        showToast(`Готово! ${flower.name} куплен. TX: ${txHash.substring(0, 8)}...`, 'success');
+        showToast(
+          isDemo
+            ? `Готово! ${flower.name} добавлен в демо-сад`
+            : `Готово! ${flower.name} куплен. TX: ${txHash.substring(0, 8)}...`,
+          'success'
+        );
         await refreshBalance();
         window.dispatchEvent(new Event(GARDEN_UPDATED_EVENT));
       } catch (error: unknown) {
@@ -101,7 +119,7 @@ export const useFlowers = (): UseFlowersResult => {
         resetStepTimer.current = window.setTimeout(() => setPurchaseStep('idle'), 2000);
       }
     },
-    [publicKey, userBalance, showToast, refreshBalance]
+    [publicKey, userBalance, showToast, refreshBalance, isDemo]
   );
 
   const purchaseLabel = purchaseStep === 'idle' ? '' : PURCHASE_STEP_LABELS[purchaseStep];

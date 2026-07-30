@@ -9,6 +9,11 @@ import { calculateWaterLevel, canWaterFlower as getWaterAvailability } from '../
 import { useWallet } from './useWallet';
 import { useToast } from './useToast';
 import type { OwnedFlower } from '../types';
+import {
+  getDemoBalance,
+  getDemoLastWatering,
+  waterDemoFlower,
+} from '../services/demoGame';
 
 interface WaterCheck {
   canWater: boolean;
@@ -30,7 +35,7 @@ interface UseGardenResult {
 }
 
 export const useGarden = (): UseGardenResult => {
-  const { publicKey, isConnected } = useWallet();
+  const { publicKey, isConnected, isDemo } = useWallet();
   const { showToast } = useToast();
   const [flowers, setFlowers] = useState<OwnedFlower[]>([]);
   const [loading, setLoading] = useState(false);
@@ -47,6 +52,11 @@ export const useGarden = (): UseGardenResult => {
   const fetchBalance = useCallback(async () => {
     if (!publicKey) return;
     setBalanceError('');
+    if (isDemo) {
+      setUserBalance(getDemoBalance());
+      return;
+    }
+
     try {
       const balance = await getXLMBalance(publicKey);
       setUserBalance(typeof balance === 'number' ? balance : 0);
@@ -54,7 +64,7 @@ export const useGarden = (): UseGardenResult => {
       setUserBalance(null);
       setBalanceError(getErrorMessage(error, 'Не удалось загрузить баланс'));
     }
-  }, [publicKey]);
+  }, [publicKey, isDemo]);
 
   const loadGardenData = useCallback(async () => {
     if (!publicKey) return;
@@ -75,7 +85,9 @@ export const useGarden = (): UseGardenResult => {
         Array.from(purchasesByFlower.entries()).map(async ([flowerId, flowerPurchases]) => {
           const [purchase] = flowerPurchases;
           const data = getFlowerById(flowerId);
-          const lastWatered = Number(await getLastWatering(publicKey, flowerId)) || 0;
+          const lastWatered = isDemo
+            ? getDemoLastWatering(flowerId)
+            : Number(await getLastWatering(publicKey, flowerId)) || 0;
 
           return {
             id: flowerId,
@@ -98,7 +110,7 @@ export const useGarden = (): UseGardenResult => {
     } finally {
       setLoading(false);
     }
-  }, [publicKey]);
+  }, [publicKey, isDemo]);
 
   const reload = useCallback(async () => {
     await Promise.all([loadGardenData(), fetchBalance()]);
@@ -148,7 +160,11 @@ export const useGarden = (): UseGardenResult => {
       showToast('Поливаем цветок...', 'info');
 
       try {
-        await waterSingleFlower(publicKey, flowerId, WATERING_COST);
+        if (isDemo) {
+          waterDemoFlower(flowerId, WATERING_COST);
+        } else {
+          await waterSingleFlower(publicKey, flowerId, WATERING_COST);
+        }
         showToast('Цветок полит', 'success');
         await reload();
       } catch (error: unknown) {
@@ -157,7 +173,7 @@ export const useGarden = (): UseGardenResult => {
         setLoading(false);
       }
     },
-    [publicKey, canWaterFlower, userBalance, showToast, reload]
+    [publicKey, canWaterFlower, userBalance, showToast, reload, isDemo]
   );
 
   const totalFlowers = useMemo(

@@ -11,6 +11,18 @@
   justify-content: flex-end;
   gap: 0.75rem;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.demo-badge {
+  margin-right: auto;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
 .game-content {

@@ -9,7 +9,7 @@ import WalletModal from '../components/WalletModal/WalletModal';
 import './GamePage.css';
 
 const GamePage: React.FC = () => {
-  const { publicKey } = useWallet();
+  const { publicKey, isDemo } = useWallet();
   const { theme, toggleTheme } = useTheme();
   const [showWalletModal, setShowWalletModal] = useState(false);
 
@@ -25,6 +25,7 @@ const GamePage: React.FC = () => {
         Перейти к игре
       </a>
       <header className="game-toolbar" aria-label="Панель игры">
+        {isDemo && <span className="demo-badge">Демо · без кошелька</span>}
         <Link className="btn btn-ghost" to="/">
           На главную
         </Link>

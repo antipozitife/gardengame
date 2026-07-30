@@ -9,9 +9,11 @@ import bgFlowers1 from '../../assets/growingBackground.jpg';
 import bgFlowers2 from '../../assets/buketsBackground.webp';
 import bgFlowers3 from '../../assets/money.jpeg';
 import './Hero.css';
+import { useWallet } from '../../hooks/useWallet';
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { startDemo } = useWallet();
   const { setCurrentSlide } = useContext(SlideContext);
   const [currentSlide, setLocalSlide] = useState(0);
   const [showWalletModal, setShowWalletModal] = useState(false);
@@ -92,6 +94,11 @@ const Hero = () => {
 
   const handleConnectWallet = () => {
     setShowWalletModal(false);
+    navigate('/game');
+  };
+
+  const handleDemoClick = () => {
+    startDemo();
     navigate('/game');
   };
 
@@ -189,6 +196,9 @@ const Hero = () => {
         <div className="hero-actions">
           <button type="button" className="btn-primary" onClick={handlePlayClick}>
             Начать играть
+          </button>
+          <button type="button" className="btn-demo" onClick={handleDemoClick}>
+            Демо без кошелька
           </button>
           <button type="button" className="btn-secondary" onClick={scrollToHowToPlay}>
             Узнать больше
