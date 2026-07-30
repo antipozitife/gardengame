@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { WalletProvider } from './context/WalletContext';
@@ -6,13 +6,14 @@ import { ThemeProvider } from './context/ThemeContext';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import PageLoader from './components/ui/PageLoader/PageLoader';
 import './App.css';
+import { lazyWithRetry } from './utils/lazyWithRetry';
 
-const Landing = lazy(() => import('./pages/MainPage'));
-const GamePage = lazy(() => import('./pages/GamePage'));
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
-const ServerErrorPage = lazy(() => import('./pages/ServerErrorPage'));
-const WalletErrorPage = lazy(() => import('./pages/WalletErrorPage'));
-const NetworkErrorPage = lazy(() => import('./pages/NetworkErrorPage'));
+const Landing = lazyWithRetry('landing', () => import('./pages/MainPage'));
+const GamePage = lazyWithRetry('game', () => import('./pages/GamePage'));
+const NotFoundPage = lazyWithRetry('not-found', () => import('./pages/NotFoundPage'));
+const ServerErrorPage = lazyWithRetry('server-error', () => import('./pages/ServerErrorPage'));
+const WalletErrorPage = lazyWithRetry('wallet-error', () => import('./pages/WalletErrorPage'));
+const NetworkErrorPage = lazyWithRetry('network-error', () => import('./pages/NetworkErrorPage'));
 
 const App: React.FC = () => {
   return (
