@@ -59,15 +59,13 @@ const Hero = () => {
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
 
     const interval = setInterval(() => {
-      setLocalSlide((prev) => {
-        const next = (prev + 1) % slides.length;
-        setCurrentSlide(next);
-        return next;
-      });
+      const next = (currentSlide + 1) % slides.length;
+      setLocalSlide(next);
+      setCurrentSlide(next);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [slides.length, setCurrentSlide]);
+  }, [currentSlide, slides.length, setCurrentSlide]);
 
   // Функция переключения слайда с обнулением таймера
   const nextSlide = () => {
