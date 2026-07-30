@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Playwrite+CZ:wght@100..400&display=swap');
 
 :root {
-  --header-height: 104px;
-  --coin-size: 82px;
+  --header-height: 120px;
+  --coin-size: calc(var(--header-height) * 4 / 2);
 }
 
 .header {
@@ -41,7 +41,7 @@
 .header-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 15px;
   height: var(--header-height);
   display: flex;
   align-items: center;
@@ -69,16 +69,6 @@
   background: rgb(var(--theme-white-rgb) / 0.32);
 }
 
-.header.header-slide-3 .theme-toggle {
-  border-color: #b8e6c8;
-  background: #277a4d;
-  color: #fff;
-}
-
-.header.header-slide-3 .theme-toggle:hover {
-  background: #31945e;
-}
-
 .nav-link-logo {
   display: flex;
   align-items: center;
@@ -87,7 +77,7 @@
   overflow: visible;
   width: var(--coin-size);
   height: var(--coin-size);
-  flex: 0 0 auto;
+  margin-top: calc(var(--coin-size) * 0.5);
   text-decoration: none;
   perspective: 1000px;
   transition: transform 0.2s ease;
@@ -113,13 +103,12 @@
 
 .header-text {
   font-family: 'Playwrite CZ', cursive;
-  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-size: 50px;
   color: var(--theme-on-dark);
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
   font-weight: 700;
   letter-spacing: 2px;
   margin: 0;
-  white-space: nowrap;
   transition: text-shadow 0.8s ease;
 }
 
@@ -212,12 +201,11 @@
 /* Адаптивность */
 @media (max-width: 1024px) {
   :root {
-    --header-height: 86px;
-    --coin-size: 68px;
+    --header-height: 100px;
   }
 
-  .header-container {
-    padding: 0 18px;
+  .header-text {
+    font-size: 40px;
   }
 }
 
@@ -232,16 +220,42 @@
     padding: 0 12px;
   }
 
-  .header-text {
+  .nav-link-logo {
+    order: 1;
+    margin-top: 0;
+    flex: 0 0 auto;
+  }
+
+  .header-brand {
+    order: 2;
     flex: 1;
     font-size: clamp(1.15rem, 5vw, 1.7rem);
     letter-spacing: 0;
     text-align: left;
+    white-space: nowrap;
+  }
+
+  .header-actions {
+    order: 3;
+  }
+
+  .header-tagline {
+    display: none;
   }
 
   .theme-toggle {
     padding: 0.42rem 0.65rem;
     font-size: 0.78rem;
+  }
+
+  .header.header-slide-3 .theme-toggle {
+    border-color: #b8e6c8;
+    background: #277a4d;
+    color: #fff;
+  }
+
+  .header.header-slide-3 .theme-toggle:hover {
+    background: #31945e;
   }
 }
 

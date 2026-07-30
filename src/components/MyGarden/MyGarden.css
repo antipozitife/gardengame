@@ -36,26 +36,27 @@
 }
 
 .my-garden .flowers-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 
-.my-garden .flower-card {
-  flex: 0 1 calc((100% - 2rem) / 3);
-  min-width: 0;
-}
-
 @media (max-width: 900px) {
+  .my-garden .flowers-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
   .my-garden .flower-card {
-    flex-basis: calc((100% - 1rem) / 2);
+    flex: 0 1 calc((100% - 1rem) / 2);
+    min-width: 0;
   }
 }
 
 @media (max-width: 560px) {
   .my-garden .flower-card {
-    flex-basis: min(100%, 360px);
+    flex: 0 1 min(100%, 360px);
   }
 }
 

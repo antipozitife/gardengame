@@ -103,6 +103,8 @@ const Header: React.FC = () => {
   return (
     <header className={`header ${getHeaderClass()}`}>
       <div className="header-container">
+        <span className="header-text header-brand">Flower Garden</span>
+
         <Link to="/" className="nav-link-logo" aria-label="Garden Game home">
           <div className="coin" ref={coinRef}>
             <div className="coin-face coin-front">
@@ -114,9 +116,8 @@ const Header: React.FC = () => {
           </div>
         </Link>
 
-        <span className="header-text">Flower Garden</span>
-
         <div className="header-actions">
+          <span className="header-text header-tagline">Play with Crypto</span>
           <button
             type="button"
             className="theme-toggle"

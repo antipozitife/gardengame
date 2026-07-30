@@ -14,6 +14,7 @@ const FlowerTypes: React.FC = () => {
     const carousel = carouselRef.current;
     const track = trackRef.current;
     if (!carousel || !track) return;
+    if (!window.matchMedia?.('(max-width: 768px)').matches) return;
 
     let animationFrame = 0;
     let previousTime = performance.now();

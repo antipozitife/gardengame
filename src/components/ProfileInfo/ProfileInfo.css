@@ -67,9 +67,23 @@
 }
 
 .local-data-label {
-  display: block;
-  margin-top: 0.3rem;
+  display: inline;
   color: var(--text-muted);
+}
+
+.local-data-label::before {
+  content: ' · ';
+}
+
+@media (max-width: 768px) {
+  .local-data-label {
+    display: block;
+    margin-top: 0.3rem;
+  }
+
+  .local-data-label::before {
+    content: '';
+  }
 }
 
 .address-box button {
