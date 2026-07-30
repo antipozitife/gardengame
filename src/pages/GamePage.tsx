@@ -7,17 +7,22 @@ import FlowerShop from '../components/FlowerShop/FlowerShop';
 import MyGarden from '../components/MyGarden/MyGarden';
 import WalletModal from '../components/WalletModal/WalletModal';
 import './GamePage.css';
+import { GAME_ACCESS_MODE } from '../constants/gameMode';
 
 const GamePage: React.FC = () => {
-  const { publicKey, isDemo } = useWallet();
+  const { publicKey, isDemo, startDemo } = useWallet();
   const { theme, toggleTheme } = useTheme();
   const [showWalletModal, setShowWalletModal] = useState(false);
 
   useEffect(() => {
     if (!publicKey) {
-      setShowWalletModal(true);
+      if (GAME_ACCESS_MODE === 'demo') {
+        startDemo();
+      } else {
+        setShowWalletModal(true);
+      }
     }
-  }, [publicKey]);
+  }, [publicKey, startDemo]);
 
   return (
     <div className="game-page">

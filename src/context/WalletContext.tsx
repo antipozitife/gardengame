@@ -10,6 +10,7 @@ import { connectAlbedo } from '../services/stellar';
 import { WALLET_STORAGE_KEY, WALLET_TYPE_KEY } from '../constants/storage';
 import type { WalletContextValue } from '../types';
 import { DEMO_PUBLIC_KEY } from '../services/demoGame';
+import { GAME_ACCESS_MODE } from '../constants/gameMode';
 
 const WalletContext = createContext<WalletContextValue | null>(null);
 
@@ -19,9 +20,10 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   useEffect(() => {
     const saved = localStorage.getItem(WALLET_STORAGE_KEY);
-    if (saved) {
+    const walletType = localStorage.getItem(WALLET_TYPE_KEY);
+    if (saved && !(GAME_ACCESS_MODE === 'wallet' && walletType === 'demo')) {
       setPublicKey(saved);
-      setIsDemo(localStorage.getItem(WALLET_TYPE_KEY) === 'demo');
+      setIsDemo(walletType === 'demo');
     }
   }, []);
 

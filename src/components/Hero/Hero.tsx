@@ -10,6 +10,7 @@ import bgFlowers2 from '../../assets/buketsBackground.webp';
 import bgFlowers3 from '../../assets/money.jpeg';
 import './Hero.css';
 import { useWallet } from '../../hooks/useWallet';
+import { GAME_ACCESS_MODE } from '../../constants/gameMode';
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -89,16 +90,17 @@ const Hero = () => {
   };
 
   const handlePlayClick = () => {
+    if (GAME_ACCESS_MODE === 'demo') {
+      startDemo();
+      navigate('/game');
+      return;
+    }
+
     setShowWalletModal(true);
   };
 
   const handleConnectWallet = () => {
     setShowWalletModal(false);
-    navigate('/game');
-  };
-
-  const handleDemoClick = () => {
-    startDemo();
     navigate('/game');
   };
 
@@ -196,9 +198,6 @@ const Hero = () => {
         <div className="hero-actions">
           <button type="button" className="btn-primary" onClick={handlePlayClick}>
             Начать играть
-          </button>
-          <button type="button" className="btn-demo" onClick={handleDemoClick}>
-            Демо без кошелька
           </button>
           <button type="button" className="btn-secondary" onClick={scrollToHowToPlay}>
             Узнать больше
