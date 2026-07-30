@@ -23,7 +23,7 @@ const Hero = () => {
       image: romashka,
       bgImage: bgFlowers1,
       bgClass: 'bg-slide-1',
-      titleColor: '#ffffff',
+      titleColor: 'var(--theme-white)',
       shadowBlur: 'rgba(0, 0, 0, 0.6)',
     },
     {
@@ -32,7 +32,7 @@ const Hero = () => {
       image: roza,
       bgImage: bgFlowers2,
       bgClass: 'bg-slide-2',
-      titleColor: '#ffffff',
+      titleColor: 'var(--theme-white)',
       shadowBlur: 'rgba(0, 0, 0, 0.6)',
     },
     {
@@ -42,7 +42,7 @@ const Hero = () => {
       bgImage: bgFlowers3,
       bgClass: 'bg-slide-3',
       titleColor: '#2d3748',
-      shadowBlur: 'rgba(255, 255, 255, 0.9)',
+      shadowBlur: 'rgb(var(--theme-white-rgb) / 0.9)',
     },
   ];
 

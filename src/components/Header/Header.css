@@ -55,9 +55,9 @@
 }
 
 .theme-toggle {
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  border: 1px solid rgb(var(--theme-white-rgb) / 0.45);
+  background: rgb(var(--theme-white-rgb) / 0.2);
+  color: var(--theme-white);
   border-radius: 999px;
   padding: 0.45rem 0.85rem;
   font-weight: 700;
@@ -66,7 +66,7 @@
 }
 
 .theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.32);
+  background: rgb(var(--theme-white-rgb) / 0.32);
 }
 
 .nav-link-logo {
@@ -96,7 +96,7 @@
   align-items: center;
   font-family: 'Playwrite CZ', cursive;
   font-size: 50px;
-  color: #fff;
+  color: var(--theme-white);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   font-weight: 1000;
 }
@@ -104,7 +104,7 @@
 .header-text {
   font-family: 'Playwrite CZ', cursive;
   font-size: 50px;
-  color: #fff;
+  color: var(--theme-white);
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
   font-weight: 700;
   letter-spacing: 2px;
