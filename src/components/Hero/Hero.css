@@ -151,7 +151,9 @@
   font-size: 3.5rem;
   font-weight: 700;
   color: var(--text-primary);
-  background: var(--bg);
+  background: color-mix(in srgb, var(--bg) 75%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border);
   border-radius: 20px;
   padding: 0.65em 0.9em;
