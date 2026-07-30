@@ -36,7 +36,7 @@ const GamePage: React.FC = () => {
           aria-pressed={theme === 'dark'}
           aria-label={theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'}
         >
-          {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          {theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
         </button>
       </header>
       <main id="game-content" className="game-content">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useFlowers } from '../../hooks/useFlowers';
 import ErrorState from '../ui/ErrorState/ErrorState';
@@ -7,6 +7,7 @@ import WalletModal from '../WalletModal/WalletModal';
 import './FlowerShop.css';
 
 const FlowerShop: React.FC = () => {
+  const flowersPerPage = 6;
   const {
     flowers,
     userBalance,
@@ -18,6 +19,16 @@ const FlowerShop: React.FC = () => {
     refreshBalance,
   } = useFlowers();
   const [showWalletModal, setShowWalletModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil(flowers.length / flowersPerPage));
+  const visibleFlowers = useMemo(
+    () => flowers.slice((currentPage - 1) * flowersPerPage, currentPage * flowersPerPage),
+    [flowers, currentPage]
+  );
+
+  useEffect(() => {
+    setCurrentPage((page) => Math.min(page, totalPages));
+  }, [totalPages]);
 
   return (
     <motion.section
@@ -63,7 +74,7 @@ const FlowerShop: React.FC = () => {
       )}
 
       <div className="flowers-grid">
-        {flowers.map((flower, index) => (
+        {visibleFlowers.map((flower, index) => (
           <motion.article
             key={flower.id}
             className="flower-card"
@@ -94,6 +105,28 @@ const FlowerShop: React.FC = () => {
           </motion.article>
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <nav className="flower-pagination" aria-label="Страницы магазина">
+          <button
+            type="button"
+            onClick={() => setCurrentPage((page) => page - 1)}
+            disabled={currentPage === 1}
+          >
+            Назад
+          </button>
+          <span>
+            Страница {currentPage} из {totalPages}
+          </span>
+          <button
+            type="button"
+            onClick={() => setCurrentPage((page) => page + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Далее
+          </button>
+        </nav>
+      )}
 
       {showWalletModal && (
         <WalletModal

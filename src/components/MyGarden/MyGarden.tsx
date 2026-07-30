@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useGarden } from '../../hooks/useGarden';
 import FlowerCardSkeleton from '../ui/Skeleton/FlowerCardSkeleton';
@@ -7,6 +7,7 @@ import Spinner from '../ui/Spinner/Spinner';
 import './MyGarden.css';
 
 const MyGarden: React.FC = () => {
+  const flowersPerPage = 6;
   const {
     flowers,
     loading,
@@ -20,6 +21,16 @@ const MyGarden: React.FC = () => {
     waterFlower,
     reload,
   } = useGarden();
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil(flowers.length / flowersPerPage));
+  const visibleFlowers = useMemo(
+    () => flowers.slice((currentPage - 1) * flowersPerPage, currentPage * flowersPerPage),
+    [flowers, currentPage]
+  );
+
+  useEffect(() => {
+    setCurrentPage((page) => Math.min(page, totalPages));
+  }, [totalPages]);
 
   if (!isConnected) {
     return (
@@ -70,7 +81,7 @@ const MyGarden: React.FC = () => {
         <div className="empty">У вас пока нет цветов. Купите первый цветок в магазине!</div>
       ) : (
         <div className="flowers-grid">
-          {flowers.map((flower) => {
+          {visibleFlowers.map((flower) => {
             const waterCheck = canWaterFlower(flower.lastWatered);
 
             return (
@@ -144,6 +155,28 @@ const MyGarden: React.FC = () => {
             );
           })}
         </div>
+      )}
+
+      {totalPages > 1 && (
+        <nav className="flower-pagination" aria-label="Страницы сада">
+          <button
+            type="button"
+            onClick={() => setCurrentPage((page) => page - 1)}
+            disabled={currentPage === 1}
+          >
+            Назад
+          </button>
+          <span>
+            Страница {currentPage} из {totalPages}
+          </span>
+          <button
+            type="button"
+            onClick={() => setCurrentPage((page) => page + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Далее
+          </button>
+        </nav>
       )}
     </motion.section>
   );

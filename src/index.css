@@ -155,3 +155,35 @@ input:focus-visible,
   border-radius: 14px !important;
   font-weight: 600 !important;
 }
+
+.flower-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.flower-pagination button {
+  min-width: 90px;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--text-primary);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.flower-pagination button:not(:disabled):hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+}
+
+.flower-pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
